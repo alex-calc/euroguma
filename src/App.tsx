@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const PRICE_BY_THICKNESS: Record<number, number> = {
   1: 790, // 20 мм
