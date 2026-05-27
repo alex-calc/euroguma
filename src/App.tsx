@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PRICE_BY_THICKNESS: Record<number, number> = {
   1: 790, // 20 мм
@@ -16,19 +17,14 @@ const PALLET_CAPACITY_MATRIX: Record<number, number> = {
 };
 
 const COLORS = [
-  { id: 'black', name: 'Чорний', hex: '#1a1a1a' },
-  { id: 'graphite', name: 'Графіт', hex: '#3d3d3d' },
-  { id: 'green', name: 'Зелений', hex: '#294d24' },
-];
-
-const FAQS = [
-  { q: "Як доглядати за гумовим покриттям?", a: "Прибирання на вулиці можливе за допомогою мітел, шлангів для поливу або повітродувок. Взимку рекомендуємо чистити дерев'яними або пластиковими лопатами без гострих країв. У приміщенні можна використовувати пилосос та робити сухе/вологе прибирання." },
-  { q: "Чи безпечна плитка для дітей?", a: "Абсолютно. Плитка має висновок санітарно-епідеміологічної експертизи МОЗ України. Вона екологічна, не виділяє токсичних речовин та має високі амортизаційні властивості, що захищає від травм при падінні (травмобезпека)." },
-  { q: "Який термін служби покриття?", a: "При правильному укладанні та експлуатації термін служби становить не менше 10 років. Плитка стійка до перепадів температур (від -40°C до +50°C), ультрафіолету та високих механічних навантажень." },
-  { q: "Що робити, якщо пошкодилась одна плитка?", a: "Однією з головних переваг модульного гумового покриття є його висока ремонтопридатність. У разі сильного пошкодження вам не потрібно міняти весь майданчик – достатньо легко замінити лише один пошкоджений елемент." }
+  { id: 'black', hex: '#1a1a1a' },
+  { id: 'graphite', hex: '#3d3d3d' },
+  { id: 'green', hex: '#294d24' },
 ];
 
 export default function App() {
+  const { t, i18n } = useTranslation();
+
   const [area, setArea] = useState<number>(40);
   const [thickness, setThickness] = useState<number>(2);
   const [selectedColor, setSelectedColor] = useState<string>('black');
@@ -40,20 +36,19 @@ export default function App() {
   const [footerPhone, setFooterPhone] = useState<string>('');
 
   const [activityIndex, setActivityIndex] = useState(0);
-  const activities = [
-    "🚚 Відвантажено 40 м² плитки для гаража у Кам'янському",
-    "✅ Отримано замовлення на покриття (60 м²) для майданчика у Дніпрі",
-    "🔥 Завод Euroguma запустив нову лінію пресування!",
-    "📐 Керівництво особисто прораховує вартість логістики для великого об'єкту",
-    "🏢 Підписано контракт на постачання плитки для фітнес-клубу"
-  ];
+
+  const activities = (t('header.ticker', { returnObjects: true }) as string[]) || [];
+  const faqs = (t('faq.items', { returnObjects: true }) as Array<{ q: string, a: string }>) || [];
+  const stepsItems = (t('steps.items', { returnObjects: true }) as Array<{ step: string, title: string, desc: string }>) || [];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActivityIndex((prev) => (prev + 1) % activities.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
+    if (activities.length > 0) {
+      const interval = setInterval(() => {
+        setActivityIndex((prev) => (prev + 1) % activities.length);
+      }, 6000);
+      return () => clearInterval(interval);
+    }
+  }, [activities.length]);
 
   const getThicknessMm = (level: number) => level === 1 ? '20 мм' : '30 мм';
   const pricePerMeter = PRICE_BY_THICKNESS[thickness] || 940;
@@ -81,34 +76,34 @@ export default function App() {
 
   const handleLeadSubmit = (messenger: 'Telegram' | 'Viber', formType: 'Замовлення' | 'Зразок' | 'Опт' = 'Замовлення', isFooter = false) => {
     const currentPhone = isFooter ? footerPhone : phone;
-    if (!currentPhone.trim()) return alert('⚠️ Будь ласка, введіть номер телефону!');
-    if (!validateUkrainianPhone(currentPhone)) return alert('❌ Некоректний формат номеру! Введіть, будь ласка, діючий номер (наприклад: 0632923975).');
+    if (!currentPhone.trim()) return alert(t('validation.enterPhone'));
+    if (!validateUkrainianPhone(currentPhone)) return alert(t('validation.invalidPhone'));
     
-    const colorName = COLORS.find(c => c.id === selectedColor)?.name || 'Чорний';
+    const colorName = t(`colors.${selectedColor}`);
     
     // Формуємо текст повідомлення
     let messageText = '';
     
     if (formType === 'Зразок') {
-      messageText = `📦 <b>ЗАЯВКА НА ЗРАЗОК (EUROGUMA)</b>\n\n` +
-                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
-                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
-                    `<i>Клієнт очікує на дзвінок для уточнення деталей відправки Новою Поштою.</i>`;
+      messageText = `📦 <b>${t('payload.sampleRequest')}</b>\n\n` +
+                    `📱 <b>${t('payload.phone')}:</b> ${currentPhone}\n` +
+                    `💬 <b>${t('payload.messenger')}:</b> ${messenger}\n\n` +
+                    `<i>${t('payload.sampleNote')}</i>`;
     } else if (formType === 'Опт') {
-      messageText = `🤝 <b>ЗАПИТ НА СПІВПРАЦЮ (ОПТ)</b>\n\n` +
-                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
-                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
-                    `<i>Клієнт хоче обговорити об'єкт та отримати оптові умови.</i>`;
+      messageText = `🤝 <b>${t('payload.coopRequest')}</b>\n\n` +
+                    `📱 <b>${t('payload.phone')}:</b> ${currentPhone}\n` +
+                    `💬 <b>${t('payload.messenger')}:</b> ${messenger}\n\n` +
+                    `<i>${t('payload.coopNote')}</i>`;
     } else {
-      messageText = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ З КАЛЬКУЛЯТОРА</b>\n\n` +
-                    `👤 <b>Клієнт:</b> ${name || 'Не вказано'}\n` +
-                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
-                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
-                    `📐 <b>Площа:</b> ${area} м²\n` +
-                    `📐 <b>Товщина плитки:</b> ${getThicknessMm(thickness)}\n` +
-                    `🎨 <b>Колір:</b> ${colorName}\n` +
-                    `🏗️ <b>Основа:</b> ${baseType === 'concrete' ? 'Тверда (Бетон/Асфальт)' : 'Сипуча (Відсів/Шлак)'}\n` +
-                    `💰 <b>Вартість:</b> ${total.toLocaleString('uk-UA')} ₴`;
+      messageText = `🔥 <b>${t('payload.orderRequest')}</b>\n\n` +
+                    `👤 <b>${t('payload.client')}:</b> ${name || t('payload.notSpecified')}\n` +
+                    `📱 <b>${t('payload.phone')}:</b> ${currentPhone}\n` +
+                    `💬 <b>${t('payload.messenger')}:</b> ${messenger}\n\n` +
+                    `📐 <b>${t('payload.area')}:</b> ${area} м²\n` +
+                    `📐 <b>${t('payload.thickness')}:</b> ${getThicknessMm(thickness)}\n` +
+                    `🎨 <b>${t('payload.color')}:</b> ${colorName}\n` +
+                    `🏗️ <b>${t('payload.base')}:</b> ${baseType === 'concrete' ? t('payload.baseConcrete') : t('payload.baseGround')}\n` +
+                    `💰 <b>${t('payload.cost')}:</b> ${total.toLocaleString('uk-UA')} ₴`;
     }
 
     // Відправка
@@ -129,19 +124,19 @@ export default function App() {
       .then(response => {
         if (response.ok) {
           if (formType === 'Зразок') {
-            alert(`📦 Заявку на ЗРАЗОК сформовано!\n\nЯ особисто зателефоную вам найближчим часом для уточнення деталей відправки Новою Поштою.\n\nЗ повагою, керівник виробництва.`);
+            alert(t('notifications.sampleSuccessAlert'));
           } else if (formType === 'Опт') {
-            alert(`🤝 Запит на співпрацю відправлено!\n\nЯ особисто зв'яжусь з вами, щоб обговорити ваш об'єкт та надати найкращі умови.\n\nЗ повагою, керівник виробництва.`);
+            alert(t('notifications.coopSuccessAlert'));
           } else {
-            alert(`🔥 Заявка для EUROGUMA успішно надійшла керівнику!\n\nЯ особисто зателефоную вам для підтвердження замовлення!`);
+            alert(t('notifications.orderSuccessAlert'));
           }
         } else {
-          alert('❌ Сталася помилка при отправці в Telegram. Спробуйте ще раз.');
+          alert(t('notifications.telegramError'));
         }
       })
       .catch(error => {
         console.error("Помилка мережі:", error);
-        alert('❌ Помилка з\'єднання. Перевірте інтернет.');
+        alert(t('notifications.networkError'));
       });
 
     } else if (messenger === 'Viber') {
@@ -150,12 +145,17 @@ export default function App() {
       const encodedText = encodeURIComponent(cleanTextForViber);
       const viberUrl = `viber://chat?number=${BOSS_VIBER_PHONE}&draft=${encodedText}`;
       window.location.href = viberUrl;
-      alert('📱 Відкриваємо Viber... Будь ласка, натисніть кнопку "Надіслати" у чаті з керівником, щоб підтвердити вашу заявку!');
+      alert(t('notifications.viberOpenAlert'));
     }
   };
 
   const currentColorObj = COLORS.find(c => c.id === selectedColor) || COLORS[0];
   const imageFileName = `/${selectedColor}_${thickness === 1 ? '20' : '30'}.jpg`;
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('i18nextLng', lng);
+  };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white scroll-smooth">
@@ -164,7 +164,9 @@ export default function App() {
       <div className="bg-blue-700 text-white text-xs md:text-sm font-semibold py-2.5 px-4 text-center sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
           <span className="inline-block animate-pulse text-blue-200">⚡</span>
-          <span className="transition-all duration-500 font-medium tracking-wide">{activities[activityIndex]}</span>
+          <span className="transition-all duration-500 font-medium tracking-wide">
+            {activities[activityIndex] || '...'}
+          </span>
         </div>
       </div>
 
@@ -182,24 +184,52 @@ export default function App() {
         </div>
 
         <div className="hidden lg:flex gap-8 text-sm font-bold text-slate-600 bg-white/80 px-6 py-2.5 rounded-full backdrop-blur-md shadow-sm border border-slate-200/50">
-          <a href="#applications" className="hover:text-blue-600 transition-colors">Застосування</a>
-          <a href="#calculator" className="hover:text-blue-600 transition-colors">Калькулятор</a>
-          <a href="#gallery" className="hover:text-blue-600 transition-colors">Галерея</a>
-          <a href="#specs" className="hover:text-blue-600 transition-colors">Характеристики</a>
+          <a href="#applications" className="hover:text-blue-600 transition-colors">{t('header.nav.applications')}</a>
+          <a href="#calculator" className="hover:text-blue-600 transition-colors">{t('header.nav.calculator')}</a>
+          <a href="#gallery" className="hover:text-blue-600 transition-colors">{t('header.nav.gallery')}</a>
+          <a href="#specs" className="hover:text-blue-600 transition-colors">{t('header.nav.specs')}</a>
         </div>
-        <div className="flex gap-3">
+
+        <div className="flex gap-3 items-center">
+          {/* LANGUAGE SWITCHER */}
+          <div className="flex bg-white/95 border border-slate-200 rounded-xl p-1 shadow-sm text-[11px] font-black gap-0.5">
+            <button 
+              type="button"
+              onClick={() => changeLanguage('uk')}
+              className={`px-2.5 py-1.5 rounded-lg transition-all ${
+                i18n.language.startsWith('uk')
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              UA
+            </button>
+            <button 
+              type="button"
+              onClick={() => changeLanguage('ru')}
+              className={`px-2.5 py-1.5 rounded-lg transition-all ${
+                i18n.language.startsWith('ru')
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              RU
+            </button>
+          </div>
+
           <button 
+            type="button"
             onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}
             className="hidden md:block bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm"
           >
-            Співпраця
+            {t('header.cooperation')}
           </button>
           
           <a href="tel:+380632923975" className="bg-slate-900 hover:bg-blue-600 text-white px-5 py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
             <div className="flex items-center gap-2 text-sm font-bold">
               <span>📞</span> <span>(063) 292-39-75</span>
             </div>
-            <div className="text-[9px] text-blue-300 font-medium uppercase tracking-wider mt-0.5">Пряма лінія керівника</div>
+            <div className="text-[9px] text-blue-300 font-medium uppercase tracking-wider mt-0.5">{t('header.bossLine')}</div>
           </a>
         </div>
       </header>
@@ -214,27 +244,29 @@ export default function App() {
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-8 mt-4">
           <div className="inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-md text-blue-400 px-5 py-2 rounded-full text-xs font-black border border-slate-700/50 uppercase tracking-widest shadow-2xl">
-            🇺🇦 Український завод-виробник
+            {t('hero.tag')}
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight max-w-5xl mx-auto drop-shadow-2xl">
-            Гумова плитка напряму від заводу: <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">без переплат посередникам</span>
+            {t('hero.title1')} <br className="hidden sm:inline" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">{t('hero.title2')}</span>
           </h1>
           <p className="text-base md:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-md">
-            Виробляємо в Кам'янському. Відвантажуємо будь-які об'єми за ціною опту. Створіть ідеальне покриття та розрахуйте вартість за 1 хвилину.
+            {t('hero.desc')}
           </p>
           <div className="pt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
             <button 
+              type="button"
               onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white text-base md:text-lg font-black px-10 py-5 rounded-2xl shadow-[0_0_40px_rgba(37,99,235,0.4)] transform hover:-translate-y-1 transition-all border border-blue-400/50 tracking-wide"
             >
-              Розрахувати вартість ⏱️
+              {t('hero.btnCalc')}
             </button>
             <button 
+              type="button"
               onClick={() => document.getElementById('sample')?.scrollIntoView({ behavior: 'smooth' })}
               className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-base md:text-lg font-black px-10 py-5 rounded-2xl transition-all border border-white/20 shadow-xl"
             >
-              📦 Отримати зразок
+              {t('hero.btnSample')}
             </button>
           </div>
         </div>
@@ -244,10 +276,10 @@ export default function App() {
       <section className="bg-white border-b border-slate-200 py-10 relative z-20 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
           {[
-            { value: "10+", label: "Років на ринку" },
-            { value: "500+", label: "Реалізованих об'єктів" },
-            { value: "15 000", label: "м² вироблено за рік" },
-            { value: "100%", label: "Відповідність ДСТУ" }
+            { value: "10+", label: t('stats.years') },
+            { value: "500+", label: t('stats.objects') },
+            { value: "15 000", label: t('stats.produced') },
+            { value: "100%", label: t('stats.dstu') }
           ].map((stat, i) => (
             <div key={i} className="text-center px-4">
               <div className="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter mb-1">{stat.value}</div>
@@ -260,14 +292,14 @@ export default function App() {
       {/* СФЕРИ ЗАСТОСУВАННЯ */}
       <section id="applications" className="max-w-6xl mx-auto px-4 py-24">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Ідеально підходить для</h2>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('apps.heading')}</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { icon: "⚽", title: "Дитячі майданчики", desc: "Амортизує удари при падінні" },
-            { icon: "🏋️", title: "Спортивні зали", desc: "Захищає основу та ізолює шум" },
-            { icon: "🏡", title: "Тераси та зони відпочинку", desc: "Не ковзає, пропускає воду" },
-            { icon: "🚗", title: "Гаражі та СТО", desc: "Стійкість до великих навантажень" }
+            { icon: "⚽", title: t('apps.items.playgrounds.title'), desc: t('apps.items.playgrounds.desc') },
+            { icon: "🏋️", title: t('apps.items.gyms.title'), desc: t('apps.items.gyms.desc') },
+            { icon: "🏡", title: t('apps.items.terraces.title'), desc: t('apps.items.terraces.desc') },
+            { icon: "🚗", title: t('apps.items.garages.title'), desc: t('apps.items.garages.desc') }
           ].map((app, i) => (
             <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl text-center transform transition-all duration-300 hover:-translate-y-2 group">
               <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{app.icon}</div>
@@ -284,22 +316,22 @@ export default function App() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
 
         <div className="max-w-6xl mx-auto text-center mb-16 relative z-10">
-          <div className="inline-block bg-white/5 backdrop-blur-sm text-blue-300 border border-white/10 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">Онлайн-калькулятор</div>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">Створіть свій майданчик</h2>
+          <div className="inline-block bg-white/5 backdrop-blur-sm text-blue-300 border border-white/10 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest mb-4">{t('calc.badge')}</div>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white drop-shadow-md">{t('calc.heading')}</h2>
         </div>
 
         <div className="max-w-6xl mx-auto bg-slate-100 rounded-[2rem] shadow-2xl overflow-hidden grid lg:grid-cols-12 border border-slate-200 relative z-10 p-2 md:p-3">
           
           <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-1.5 px-4 text-center text-xs md:text-sm font-black rounded-full shadow-md z-10 flex items-center justify-center gap-2">
             <span>🔥</span>
-            <span>Відвантаження від 50 м² за 2 дні!</span>
+            <span>{t('calc.ticker')}</span>
           </div>
 
           <div className="lg:col-span-7 p-6 md:p-8 space-y-6 mt-8">
             
             {/* Карточка 1: Визуализация и Цвет */}
             <div className="bg-white p-5 rounded-2xl shadow-lg border border-slate-100">
-               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Візуалізація та вибір кольору</div>
+               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{t('calc.visualCard')}</div>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                    
                    {/* БЛОК ЖИВИХ ФОТО */}
@@ -309,8 +341,8 @@ export default function App() {
                   >
                     {/* Текстова заглушка (видно, якщо немає фото) */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white/60 font-bold z-0 mix-blend-overlay pointer-events-none">
-                        <span className="text-[10px] uppercase tracking-widest mb-1">Місце для фото</span>
-                        <span className="text-sm">{currentColorObj.name} {thickness === 1 ? '20мм' : '30мм'}</span>
+                        <span className="text-[10px] uppercase tracking-widest mb-1">{t('calc.photoPlaceholder')}</span>
+                        <span className="text-sm">{t(`colors.${currentColorObj.id}`)} {thickness === 1 ? '20мм' : '30мм'}</span>
                     </div>
                     
                     {/* Шум для текстури (видно, якщо немає фото) */}
@@ -320,7 +352,7 @@ export default function App() {
                     {/* Саме фото (перекриє заглушку, якщо файл існує) */}
                     <img 
                       src={imageFileName} 
-                      alt={`Плитка ${currentColorObj.name} ${thickness === 1 ? '20мм' : '30мм'}`}
+                      alt={`Плитка ${t(`colors.${currentColorObj.id}`)} ${thickness === 1 ? '20мм' : '30мм'}`}
                       className="w-full h-full object-cover relative z-10"
                       onError={(e) => (e.currentTarget.style.display = 'none')}
                     />
@@ -334,11 +366,11 @@ export default function App() {
                           selectedColor === c.id ? 'ring-4 ring-blue-500/50 scale-105 z-10 shadow-lg' : 'ring-1 ring-slate-300 hover:scale-105'
                         }`}
                         style={{ backgroundColor: c.hex }}
-                        title={c.name}
+                        title={t(`colors.${c.id}`)}
                       >
                         <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
                         {selectedColor === c.id && <span className="text-white drop-shadow-md text-sm font-black relative z-10">✓</span>}
-                        <span className={`text-[9px] font-bold mt-1 relative z-10 ${c.id === 'green' ? 'text-white' : 'text-slate-400'}`}>{c.name}</span>
+                        <span className={`text-[9px] font-bold mt-1 relative z-10 ${c.id === 'green' ? 'text-white' : 'text-slate-400'}`}>{t(`colors.${c.id}`)}</span>
                       </button>
                     ))}
                   </div>
@@ -349,7 +381,7 @@ export default function App() {
             <div className="bg-white p-5 rounded-2xl shadow-lg border border-slate-100 space-y-5">
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Необхідна площа</label>
+                    <label className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">{t('calc.areaLabel')}</label>
                     <span className="text-sm font-black text-blue-600 bg-blue-50 px-4 py-1 rounded-lg border border-blue-100 shadow-inner">{area} м²</span>
                   </div>
                   <input 
@@ -361,30 +393,30 @@ export default function App() {
 
                 <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2">Товщина плитки</label>
+                      <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2">{t('calc.thicknessLabel')}</label>
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           { id: 1, label: '20 мм' },
                           { id: 2, label: '30 мм' }
-                        ].map((t) => (
+                        ].map((tVal) => (
                           <button
-                            key={t.id} type="button" onClick={() => handleThicknessChange(t.id)}
+                            key={tVal.id} type="button" onClick={() => handleThicknessChange(tVal.id)}
                             className={`w-full py-2.5 rounded-lg border text-center transition-all ${
-                              thickness === t.id ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-500/30' : 'border-slate-200 text-slate-600 bg-white hover:bg-slate-50'
+                              thickness === tVal.id ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-500/30' : 'border-slate-200 text-slate-600 bg-white hover:bg-slate-50'
                             }`}
                           >
-                            <span className="text-xs font-black">{t.label}</span>
+                            <span className="text-xs font-black">{tVal.label}</span>
                           </button>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2">Основа майданчика</label>
+                      <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-2">{t('calc.baseLabel')}</label>
                       <div className="grid grid-cols-2 gap-2">
                         {[
-                          { id: 'concrete', label: 'Тверда (Бетон)' },
-                          { id: 'ground', label: 'Сипуча (Відсів)' }
+                          { id: 'concrete', label: t('calc.baseConcrete') },
+                          { id: 'ground', label: t('calc.baseGround') }
                         ].map((b) => (
                           <button
                             key={b.id} type="button" onClick={() => handleBaseTypeChange(b.id)}
@@ -401,7 +433,7 @@ export default function App() {
                 
                 {/* Підказка експерта */}
                 <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-[10px] text-slate-500 font-medium leading-relaxed">
-                  <span className="font-bold text-blue-600">💡 Зверніть увагу:</span> Гумова плитка товщиною 20 мм укладається виключно на тверду основу (асфальт, бетонна стяжка). Для підготовленої сипучої основи (відсів, шлакова відсипка) необхідна товщина плитки від 30 мм.
+                  <span className="font-bold text-blue-600">💡 {i18n.language.startsWith('uk') ? 'Зверніть увагу:' : 'Обратите внимание:'}</span> {t('calc.expertNote')}
                 </div>
             </div>
 
@@ -417,49 +449,49 @@ export default function App() {
               
               <div className="bg-white/5 border border-white/10 p-5 rounded-2xl transform hover:scale-[1.02] transition-all">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-[10px] font-bold text-slate-400 block tracking-wider uppercase">Загальна вартість:</span>
+                  <span className="text-[10px] font-bold text-slate-400 block tracking-wider uppercase">{t('calc.totalCost')}</span>
                   <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">
-                    {pricePerMeter} грн / м²
+                    {pricePerMeter} {t('calc.pricePerMeter')}
                   </span>
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-5xl font-extrabold text-white tracking-tight drop-shadow-md">{total.toLocaleString('uk-UA')}</span>
-                  <span className="text-xl text-blue-400 font-extrabold">грн</span>
+                  <span className="text-xl text-blue-400 font-extrabold">{t('calc.uah')}</span>
                 </div>
-                <div className="text-[10px] text-slate-500 font-medium mt-2">Ціна напряму від заводу виробника.</div>
+                <div className="text-[10px] text-slate-500 font-medium mt-2">{t('calc.factoryPriceNote')}</div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white p-4 rounded-xl shadow-inner border border-slate-100 flex items-center gap-3">
                       <div className="text-2xl text-blue-600">⚖️</div>
                       <div>
-                          <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Загальна вага</div>
-                          <div className="text-base font-black text-slate-900">{totalWeightKg.toLocaleString('uk-UA')} <span className="text-xs">кг</span></div>
+                          <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{t('calc.weightLabel')}</div>
+                          <div className="text-base font-black text-slate-900">{totalWeightKg.toLocaleString('uk-UA')} <span className="text-xs">{t('calc.kg')}</span></div>
                       </div>
                   </div>
                   <div className="bg-white p-4 rounded-xl shadow-inner border border-slate-100 flex items-center gap-3">
                       <div className="text-2xl text-blue-600">📦</div>
                       <div>
-                          <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Об'єм</div>
-                          <div className="text-base font-black text-slate-900">{palletsNeeded} <span className="text-xs">піддонів</span></div>
+                          <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{t('calc.volumeLabel')}</div>
+                          <div className="text-base font-black text-slate-900">{palletsNeeded} <span className="text-xs">{t('calc.pallets')}</span></div>
                       </div>
                   </div>
               </div>
             </div>
 
             <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-3 relative z-10 mt-8">
-              <h4 className="text-[11px] font-black text-white text-center uppercase tracking-wider mb-2">Замовити без посередників</h4>
+              <h4 className="text-[11px] font-black text-white text-center uppercase tracking-wider mb-2">{t('calc.orderDirect')}</h4>
               <input 
-                type="text" placeholder="Ім'я" value={name} onChange={(e) => setName(e.target.value)}
+                type="text" placeholder={t('calc.namePlaceholder')} value={name} onChange={(e) => setName(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
               <input 
-                type="tel" placeholder="Ваш телефон" value={phone} onChange={(e) => setPhone(e.target.value)}
+                type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
               <div className="grid grid-cols-2 gap-3 pt-1">
-                <button onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">✈️ Telegram</button>
-                <button onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">📞 Viber</button>
+                <button type="button" onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">✈️ Telegram</button>
+                <button type="button" onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">📞 Viber</button>
               </div>
             </div>
             
@@ -474,62 +506,62 @@ export default function App() {
         
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 relative z-10">
           <div className="md:w-1/2 space-y-6 text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Сумніваєтесь у якості? <br/> Відчуйте її на дотик!</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('lead.sample.title')}</h2>
             <p className="text-blue-100 font-medium text-lg leading-relaxed">
-              Замовляйте набір зразків нашої гумової плитки. Ми відправимо його Новою Поштою, щоб ви могли особисто переконатися у міцності та амортизації продукції перед покупкою.
+              {t('lead.sample.desc')}
             </p>
             <ul className="text-sm font-bold text-blue-50 space-y-2">
               <li className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> Всі 3 кольори у наборі
+                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> {t('lead.sample.item1')}
               </li>
               <li className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> Зразки 20 мм та 30 мм
+                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> {t('lead.sample.item2')}
               </li>
               <li className="flex items-center gap-2 justify-center md:justify-start">
-                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> Оцінка щільності наживо
+                <span className="bg-blue-500 p-1 rounded-full text-[10px]">✓</span> {t('lead.sample.item3')}
               </li>
             </ul>
           </div>
           <div className="md:w-1/2 w-full max-w-sm bg-white p-6 rounded-3xl shadow-2xl text-slate-800 mx-auto border-4 border-blue-400/30 transform hover:-translate-y-1 transition-transform duration-500">
-             <h4 className="text-lg font-black text-center mb-4">Отримати зразки 📦</h4>
+             <h4 className="text-lg font-black text-center mb-4">{t('lead.sample.btnTitle')}</h4>
              <input 
-                type="tel" placeholder="Ваш телефон" value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
+                type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
                 className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-50 mb-4 placeholder-slate-400 transition-colors"
               />
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => handleLeadSubmit('Telegram', 'Зразок', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Telegram</button>
-                <button onClick={() => handleLeadSubmit('Viber', 'Зразок', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Viber</button>
+                <button type="button" onClick={() => handleLeadSubmit('Telegram', 'Зразок', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Telegram</button>
+                <button type="button" onClick={() => handleLeadSubmit('Viber', 'Зразок', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Viber</button>
               </div>
-              <div className="text-[10px] text-center text-slate-400 mt-4 font-medium">Керівник виробництва зателефонує вам для уточнення даних відправки.</div>
+              <div className="text-[10px] text-center text-slate-400 mt-4 font-medium">{t('lead.sample.note')}</div>
           </div>
         </div>
       </section>
 
-      {/* ГАЛЕРЕЯ (Без масивних заголовків) */}
+      {/* ГАЛЕРЕЯ */}
       <section id="gallery" className="max-w-7xl mx-auto px-4 py-24 border-t border-slate-200">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Реалізовані об'єкти</h2>
-          <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">Приклади використання нашої гумової плитки на об'єктах клієнтів по всій Україні.</p>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('gallery.title')}</h2>
+          <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">{t('gallery.desc')}</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { src: "/1.webp", desc: "м. Дніпро • 120 м²" },
-            { src: "/2.webp", desc: "м. Кам'янське • 85 м²" },
-            { src: "/3.webp", desc: "м. Кривий Ріг • 35 м²" },
-            { src: "/4.webp", desc: "м. Полтава • 45 м²" },
-            { src: "/5.webp", desc: "м. Харків • 150 м²" },
-            { src: "/6.webp", desc: "м. Київ • 60 м²" }
+            { src: "/1.webp", desc: t('gallery.cities.dnipro') },
+            { src: "/2.webp", desc: t('gallery.cities.kamianske') },
+            { src: "/3.webp", desc: t('gallery.cities.kryvyirih') },
+            { src: "/4.webp", desc: t('gallery.cities.poltava') },
+            { src: "/5.webp", desc: t('gallery.cities.kharkiv') },
+            { src: "/6.webp", desc: t('gallery.cities.kyiv') }
           ].map((item, index) => (
             <div key={index} className="overflow-hidden rounded-2xl shadow-md border border-slate-200 bg-white flex flex-col group cursor-pointer hover:shadow-xl transition-all duration-300 relative">
               <div className="h-64 overflow-hidden relative bg-slate-100 flex items-center justify-center">
                 <img 
                   src={item.src} 
-                  alt={`Об'єкт ${index + 1}`} 
+                  alt={`Obj ${index + 1}`} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-400 text-sm font-bold">Чекає на фото ${index + 1}.webp</span>`;
+                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-400 text-sm font-bold">${t('gallery.photoWait')} ${index + 1}.webp</span>`;
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
@@ -548,21 +580,21 @@ export default function App() {
       <section id="specs" className="bg-slate-100 py-24 px-4 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Технічні характеристики плитки</h2>
-            <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">Наша продукція виготовляється відповідно до державних стандартів та має всі необхідні сертифікати якості.</p>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('specs.title')}</h2>
+            <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">{t('specs.desc')}</p>
           </div>
 
           <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
             <div className="grid md:grid-cols-2">
               <div className="p-0 border-r border-slate-200">
-                <div className="bg-slate-50 py-4 px-6 font-black text-slate-800 border-b border-slate-200">Загальні параметри</div>
+                <div className="bg-slate-50 py-4 px-6 font-black text-slate-800 border-b border-slate-200">{t('specs.generalParams')}</div>
                 <ul className="divide-y divide-slate-100">
                   {[
-                    { label: "Геометричний розмір", value: "500 x 500 мм" },
-                    { label: "Варіанти товщини", value: "20 мм, 30 мм" },
-                    { label: "Матеріал плитки", value: "Гумова крихта, поліуретан" },
-                    { label: "Властивість", value: "Водопроникне (дренажне)" },
-                    { label: "Термін експлуатації", value: "Не менше 10 років" }
+                    { label: t('specs.labels.size'), value: t('specs.values.size') },
+                    { label: t('specs.labels.thickness'), value: t('specs.values.thickness') },
+                    { label: t('specs.labels.material'), value: t('specs.values.material') },
+                    { label: t('specs.labels.property'), value: t('specs.values.property') },
+                    { label: t('specs.labels.lifetime'), value: t('specs.values.lifetime') }
                   ].map((item, i) => (
                     <li key={i} className="py-4 px-6 flex justify-between items-center hover:bg-slate-50 transition-colors">
                       <span className="text-sm font-bold text-slate-500">{item.label}</span>
@@ -572,14 +604,14 @@ export default function App() {
                 </ul>
               </div>
               <div className="p-0">
-                <div className="bg-slate-50 py-4 px-6 font-black text-slate-800 border-b border-slate-200">Фізико-технічні властивості</div>
+                <div className="bg-slate-50 py-4 px-6 font-black text-slate-800 border-b border-slate-200">{t('specs.physicParams')}</div>
                 <ul className="divide-y divide-slate-100">
                   {[
-                    { label: "Щільність покриття", value: "780 кг/м³ (до 1110 кг/м³)" },
-                    { label: "Твердість (Шор А)", value: "50 - 70 од." },
-                    { label: "Міцність при 10% деформ.", value: "13,05 кг/см²" },
-                    { label: "Стиранність", value: "0,05 г/см²" },
-                    { label: "Температурний режим", value: "від -40˚С до +50˚С" }
+                    { label: t('specs.labels.density'), value: t('specs.values.density') },
+                    { label: t('specs.labels.hardness'), value: t('specs.values.hardness') },
+                    { label: t('specs.labels.strength'), value: t('specs.values.strength') },
+                    { label: t('specs.labels.abrasion'), value: t('specs.values.abrasion') },
+                    { label: t('specs.labels.tempMode'), value: t('specs.values.tempMode') }
                   ].map((item, i) => (
                     <li key={i} className="py-4 px-6 flex justify-between items-center hover:bg-slate-50 transition-colors">
                       <span className="text-sm font-bold text-slate-500">{item.label}</span>
@@ -593,8 +625,8 @@ export default function App() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="text-3xl">📄</div>
                 <div>
-                  <div className="text-sm font-black text-blue-900">Офіційна документація</div>
-                  <div className="text-xs font-medium text-blue-800 mt-1">ТУ У 25.1-35591478-002:2010 • Висновок СЕС МОЗ України № 05.03.02-04/31010</div>
+                  <div className="text-sm font-black text-blue-900">{t('specs.docTitle')}</div>
+                  <div className="text-xs font-medium text-blue-800 mt-1">{t('specs.docDesc')}</div>
                 </div>
               </div>
             </div>
@@ -606,19 +638,14 @@ export default function App() {
       <section className="bg-slate-900 text-white py-24 px-4 border-t border-slate-800">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">Етапи роботи</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('steps.title')}</h2>
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { step: "01", title: "Конфігурація", text: "Обираєте товщину та колір плитки під ваш об'єкт." },
-              { step: "02", title: "Пресування", text: "Виготовляємо плитку під високим тиском." },
-              { step: "03", title: "Якість", text: "Кожна партія суворо тестується за ДСТУ." },
-              { step: "04", title: "Відвантаження", text: "Самовивіз з Кам'янського або доставка по Україні." }
-            ].map((s, i) => (
+            {stepsItems.map((s, i) => (
               <div key={i} className="bg-slate-800 p-8 rounded-3xl border border-slate-700 relative overflow-hidden transform transition hover:-translate-y-2 group">
                 <span className="text-7xl font-black text-white/5 absolute -top-2 -left-2 select-none z-0 group-hover:text-white/10 transition-colors">{s.step}</span>
                 <div className="font-black text-xl mb-3 relative z-10">{s.title}</div>
-                <p className="text-sm text-slate-400 font-medium leading-relaxed relative z-10">{s.text}</p>
+                <p className="text-sm text-slate-400 font-medium leading-relaxed relative z-10">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -628,12 +655,13 @@ export default function App() {
       {/* FAQ */}
       <section id="faq" className="max-w-4xl mx-auto px-4 py-24">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">Поширені запитання</h2>
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('faq.title')}</h2>
         </div>
         <div className="space-y-4">
-          {FAQS.map((faq, i) => (
+          {faqs.map((faq, i) => (
             <div key={i} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <button 
+                type="button"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 className="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none"
               >
@@ -656,9 +684,9 @@ export default function App() {
         
         <div className="max-w-4xl mx-auto space-y-10 relative z-10">
           <div className="space-y-4">
-            <h3 className="text-3xl md:text-4xl font-black tracking-tight">Прямий зв'язок з керівництвом</h3>
+            <h3 className="text-3xl md:text-4xl font-black tracking-tight">{t('footer.title')}</h3>
             <p className="text-slate-400 text-sm font-medium max-w-xl mx-auto leading-relaxed">
-              Спілкуйтесь напряму з керівником виробництва. Жодних менеджерів-посередників та очікувань. Залиште номер, і я особисто проконсультую вас щодо вашого об'єкту та умов співпраці.
+              {t('footer.desc')}
             </p>
           </div>
 
@@ -666,18 +694,18 @@ export default function App() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl opacity-50 z-0"></div>
             
             <input 
-              type="tel" placeholder="Ваш телефон" value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
+              type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
               className="w-full px-5 py-4 rounded-xl border-2 border-slate-700 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-800 text-white placeholder-slate-500 shadow-inner transition-colors relative z-10"
             />
             <div className="grid grid-cols-2 gap-3 relative z-10">
-              <button onClick={() => handleLeadSubmit('Telegram', 'Опт', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">✈️ Telegram</button>
-              <button onClick={() => handleLeadSubmit('Viber', 'Опт', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">📞 Viber</button>
+              <button type="button" onClick={() => handleLeadSubmit('Telegram', 'Опт', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">✈️ Telegram</button>
+              <button type="button" onClick={() => handleLeadSubmit('Viber', 'Опт', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">📞 Viber</button>
             </div>
-            <div className="text-[11px] text-slate-400 mt-2 font-medium z-10 relative">Я гарантую конфіденційність ваших даних.</div>
+            <div className="text-[11px] text-slate-400 mt-2 font-medium z-10 relative">{t('footer.privacy')}</div>
           </div>
 
           <div className="pt-10 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-            <div className="font-medium text-left">© 2026 Завод гумових покриттів EUROGUMA. м. Кам'янське. Телефон: (063) 292-39-75</div>
+            <div className="font-medium text-left">{t('footer.copyright')}</div>
             <div className="font-bold text-slate-600 sm:text-right whitespace-nowrap text-blue-900/50">White-Label Engine v4.15</div>
           </div>
         </div>
