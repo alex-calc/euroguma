@@ -41,6 +41,23 @@ export default function App() {
   const faqs = (t('faq.items', { returnObjects: true }) as Array<{ q: string, a: string }>) || [];
   const stepsItems = (t('steps.items', { returnObjects: true }) as Array<{ step: string, title: string, desc: string }>) || [];
 
+  // Routing Effect: Sync language from URL pathname and listen to popstate
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const currentLang = path.startsWith('/ru') ? 'ru' : 'uk';
+      if (i18n.language !== currentLang) {
+        i18n.changeLanguage(currentLang);
+      }
+    };
+
+    // Run on mount to initialize correct language based on route
+    handlePopState();
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [i18n]);
+
   useEffect(() => {
     if (activities.length > 0) {
       const interval = setInterval(() => {
@@ -155,6 +172,20 @@ export default function App() {
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     localStorage.setItem('i18nextLng', lng);
+    
+    const currentHash = window.location.hash;
+    const currentPath = window.location.pathname;
+    
+    if (lng === 'ru') {
+      if (!currentPath.startsWith('/ru')) {
+        window.history.pushState({}, '', '/ru' + currentHash);
+      }
+    } else {
+      if (currentPath.startsWith('/ru')) {
+        const newPath = currentPath.substring(3) || '/';
+        window.history.pushState({}, '', newPath + currentHash);
+      }
+    }
   };
 
   return (
