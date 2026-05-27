@@ -25,6 +25,7 @@ const COLORS = [
 export default function App() {
   const { t, i18n } = useTranslation();
 
+  const [path, setPath] = useState<string>(window.location.pathname);
   const [area, setArea] = useState<number>(40);
   const [thickness, setThickness] = useState<number>(2);
   const [selectedColor, setSelectedColor] = useState<string>('black');
@@ -41,17 +42,17 @@ export default function App() {
   const faqs = (t('faq.items', { returnObjects: true }) as Array<{ q: string, a: string }>) || [];
   const stepsItems = (t('steps.items', { returnObjects: true }) as Array<{ step: string, title: string, desc: string }>) || [];
 
-  // Routing Effect: Sync language from URL pathname and listen to popstate
+  // Routing Effect: Sync language and page state from URL pathname
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
-      const currentLang = path.startsWith('/ru') ? 'ru' : 'uk';
+      const currentPath = window.location.pathname;
+      setPath(currentPath);
+      const currentLang = currentPath.startsWith('/ru') ? 'ru' : 'uk';
       if (i18n.language !== currentLang) {
         i18n.changeLanguage(currentLang);
       }
     };
 
-    // Run on mount to initialize correct language based on route
     handlePopState();
 
     window.addEventListener('popstate', handlePopState);
@@ -84,6 +85,36 @@ export default function App() {
   const handleBaseTypeChange = (id: string) => {
     setBaseType(id);
     if (id === 'ground' && thickness === 1) setThickness(2);
+  };
+
+  // Custom Phone Masking Logic
+  const formatPhoneNumber = (value: string) => {
+    const digits = value.replace(/\D/g, '');
+    
+    let local = digits;
+    if (digits.startsWith('380')) {
+      local = digits.slice(2); // slice off "38" to make it "0..."
+    } else if (digits.startsWith('80') && digits.length > 2) {
+      local = '0' + digits.slice(2); // replace "80..." with "0..."
+    } else if (!digits.startsWith('0') && digits.length > 0) {
+      local = '0' + digits; // prepend '0' if they type without it
+    }
+    
+    const part0 = local.slice(0, 3); // 0XX
+    const part1 = local.slice(3, 6); // XXX
+    const part2 = local.slice(6, 8); // XX
+    const part3 = local.slice(8, 10); // XX
+    
+    if (local.length === 0) return '';
+    if (local.length <= 3) return `+38 (${part0}`;
+    if (local.length <= 6) return `+38 (${part0}) ${part1}`;
+    if (local.length <= 8) return `+38 (${part0}) ${part1}-${part2}`;
+    return `+38 (${part0}) ${part1}-${part2}-${part3}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (v: string) => void) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setter(formatted);
   };
 
   const validateUkrainianPhone = (phoneStr: string) => {
@@ -123,6 +154,17 @@ export default function App() {
                     `💰 <b>${t('payload.cost')}:</b> ${total.toLocaleString('uk-UA')} ₴`;
     }
 
+    const redirectToThankYou = () => {
+      const targetThankYouPath = i18n.language.startsWith('ru') ? '/ru/thank-you' : '/thank-you';
+      window.history.pushState({}, '', targetThankYouPath);
+      setPath(targetThankYouPath);
+      
+      // Reset fields
+      setName('');
+      setPhone('');
+      setFooterPhone('');
+    };
+
     // Відправка
     if (messenger === 'Telegram') {
       const TELEGRAM_TOKEN = "8738176172:AAGmNEziZBwzwV1Lfd0j2cLukMzExGCT6g4";
@@ -140,13 +182,7 @@ export default function App() {
       })
       .then(response => {
         if (response.ok) {
-          if (formType === 'Зразок') {
-            alert(t('notifications.sampleSuccessAlert'));
-          } else if (formType === 'Опт') {
-            alert(t('notifications.coopSuccessAlert'));
-          } else {
-            alert(t('notifications.orderSuccessAlert'));
-          }
+          redirectToThankYou();
         } else {
           alert(t('notifications.telegramError'));
         }
@@ -162,6 +198,7 @@ export default function App() {
       const encodedText = encodeURIComponent(cleanTextForViber);
       const viberUrl = `viber://chat?number=${BOSS_VIBER_PHONE}&draft=${encodedText}`;
       window.location.href = viberUrl;
+      redirectToThankYou();
       alert(t('notifications.viberOpenAlert'));
     }
   };
@@ -178,16 +215,84 @@ export default function App() {
     
     if (lng === 'ru') {
       if (!currentPath.startsWith('/ru')) {
-        window.history.pushState({}, '', '/ru' + currentHash);
+        const nextPath = currentPath.startsWith('/thank-you') ? '/ru/thank-you' : '/ru';
+        window.history.pushState({}, '', nextPath + currentHash);
+        setPath(nextPath);
       }
     } else {
       if (currentPath.startsWith('/ru')) {
-        const newPath = currentPath.substring(3) || '/';
-        window.history.pushState({}, '', newPath + currentHash);
+        const nextPath = currentPath.startsWith('/ru/thank-you') ? '/thank-you' : '/';
+        window.history.pushState({}, '', nextPath + currentHash);
+        setPath(nextPath);
       }
     }
   };
 
+  const isThankYouPage = path === '/thank-you' || path === '/ru/thank-you' || path.endsWith('/thank-you');
+
+  // RENDER THANK YOU PAGE
+  if (isThankYouPage) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
+        {/* HEADER Ticker */}
+        <div className="bg-blue-700 text-white text-xs md:text-sm font-semibold py-2.5 px-4 text-center shadow-md">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <span className="inline-block animate-pulse text-blue-200">⚡</span>
+            <span className="transition-all duration-500 font-medium tracking-wide">
+              {activities[activityIndex] || '...'}
+            </span>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-grow flex items-center justify-center p-4 py-16 relative overflow-hidden bg-slate-900">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
+          
+          <div className="max-w-xl w-full bg-slate-950/60 backdrop-blur-md p-8 md:p-12 rounded-[2rem] border border-white/10 text-center shadow-2xl relative z-10 transform hover:scale-[1.01] transition-transform duration-500">
+            {/* Animated Checkmark Badge */}
+            <div className="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-blue-500/30 animate-[pulse_2s_infinite]">
+              <span className="text-white text-4xl font-black">✓</span>
+            </div>
+
+            <div className="inline-block bg-blue-500/20 text-blue-300 border border-blue-400/30 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4">
+              {t('thankYou.badge')}
+            </div>
+
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white mb-6 leading-tight drop-shadow-md">
+              {t('thankYou.title')}
+            </h1>
+
+            <p className="text-slate-300 text-base md:text-lg font-medium leading-relaxed mb-10 max-w-md mx-auto">
+              {t('thankYou.desc')}
+            </p>
+
+            <button 
+              type="button"
+              onClick={() => {
+                const homePath = i18n.language.startsWith('ru') ? '/ru' : '/';
+                window.history.pushState({}, '', homePath);
+                setPath(homePath);
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white text-base font-black py-4 px-8 rounded-2xl transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)] transform active:scale-95 border border-blue-400/40"
+            >
+              {t('thankYou.btnBack')}
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="bg-slate-950 text-white py-6 px-4 text-center border-t border-slate-900 text-xs text-slate-500">
+          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div className="font-medium">{t('footer.copyright')}</div>
+            <div className="font-bold text-slate-600 text-blue-900/50">White-Label Engine v4.15</div>
+          </div>
+        </footer>
+      </div>
+    );
+  }
+
+  // RENDER LANDING PAGE
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white scroll-smooth">
       
@@ -517,7 +622,7 @@ export default function App() {
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
               <input 
-                type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => setPhone(e.target.value)}
+                type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => handlePhoneChange(e, setPhone)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
               <div className="grid grid-cols-2 gap-3 pt-1">
@@ -556,7 +661,7 @@ export default function App() {
           <div className="md:w-1/2 w-full max-w-sm bg-white p-6 rounded-3xl shadow-2xl text-slate-800 mx-auto border-4 border-blue-400/30 transform hover:-translate-y-1 transition-transform duration-500">
              <h4 className="text-lg font-black text-center mb-4">{t('lead.sample.btnTitle')}</h4>
              <input 
-                type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
+                type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => handlePhoneChange(e, setFooterPhone)}
                 className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-50 mb-4 placeholder-slate-400 transition-colors"
               />
               <div className="grid grid-cols-2 gap-2">
@@ -725,7 +830,7 @@ export default function App() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl opacity-50 z-0"></div>
             
             <input 
-              type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => setFooterPhone(e.target.value)}
+              type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => handlePhoneChange(e, setFooterPhone)}
               className="w-full px-5 py-4 rounded-xl border-2 border-slate-700 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-800 text-white placeholder-slate-500 shadow-inner transition-colors relative z-10"
             />
             <div className="grid grid-cols-2 gap-3 relative z-10">
