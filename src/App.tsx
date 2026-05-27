@@ -86,12 +86,71 @@ export default function App() {
     
     const colorName = COLORS.find(c => c.id === selectedColor)?.name || 'Чорний';
     
+    // Формуємо текст повідомлення
+    let messageText = '';
+    
     if (formType === 'Зразок') {
-      alert(`📦 Заявку на ЗРАЗОК сформовано!\n\nТелефон: ${currentPhone}\nМесенджер: ${messenger}\n\nЯ особисто зателефоную вам найближчим часом для уточнення деталей відправки Новою Поштою.\n\nЗ повагою, керівник виробництва.`);
+      messageText = `📦 <b>ЗАЯВКА НА ЗРАЗОК (EUROGUMA)</b>\n\n` +
+                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
+                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
+                    `<i>Клієнт очікує на дзвінок для уточнення деталей відправки Новою Поштою.</i>`;
     } else if (formType === 'Опт') {
-      alert(`🤝 Запит на співпрацю відправлено!\n\nТелефон: ${currentPhone}\nМесенджер: ${messenger}\n\nЯ особисто зв'яжусь з вами, щоб обговорити ваш об'єкт та надати найкращі умови.\n\nЗ повагою, керівник виробництва.`);
+      messageText = `🤝 <b>ЗАПИТ НА СПІВПРАЦЮ (ОПТ)</b>\n\n` +
+                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
+                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
+                    `<i>Клієнт хоче обговорити об'єкт та отримати оптові умови.</i>`;
     } else {
-      alert(`🔥 Заявка для EUROGUMA успішно надійшла керівнику!\n\nКлієнт: ${name || 'Не вказано'}\nТелефон: ${currentPhone}\nМесенджер: ${messenger}\n\nПлоща: ${area} м²\nТовщина плитки: ${getThicknessMm(thickness)}\nКолір: ${colorName}\nОснова: ${baseType === 'concrete' ? 'Тверда (Бетон/Асфальт)' : 'Сипуча (Відсів/Шлак)'}\nВартість: ${total.toLocaleString('uk-UA')} ₴\n\nЯ особисто зателефоную вам для підтвердження замовлення!`);
+      messageText = `🔥 <b>НОВЕ ЗАМОВЛЕННЯ З КАЛЬКУЛЯТОРА</b>\n\n` +
+                    `👤 <b>Клієнт:</b> ${name || 'Не вказано'}\n` +
+                    `📱 <b>Телефон:</b> ${currentPhone}\n` +
+                    `💬 <b>Месенджер:</b> ${messenger}\n\n` +
+                    `📐 <b>Площа:</b> ${area} м²\n` +
+                    `📐 <b>Товщина плитки:</b> ${getThicknessMm(thickness)}\n` +
+                    `🎨 <b>Колір:</b> ${colorName}\n` +
+                    `🏗️ <b>Основа:</b> ${baseType === 'concrete' ? 'Тверда (Бетон/Асфальт)' : 'Сипуча (Відсів/Шлак)'}\n` +
+                    `💰 <b>Вартість:</b> ${total.toLocaleString('uk-UA')} ₴`;
+    }
+
+    // Відправка
+    if (messenger === 'Telegram') {
+      const TELEGRAM_TOKEN = "8738176172:AAGmNEziZBwzwV1Lfd0j2cLukMzExGCT6g4";
+      const CHAT_ID = "1142060901";
+      const URI_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
+      fetch(URI_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: messageText,
+          parse_mode: 'HTML'
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          if (formType === 'Зразок') {
+            alert(`📦 Заявку на ЗРАЗОК сформовано!\n\nЯ особисто зателефоную вам найближчим часом для уточнення деталей відправки Новою Поштою.\n\nЗ повагою, керівник виробництва.`);
+          } else if (formType === 'Опт') {
+            alert(`🤝 Запит на співпрацю відправлено!\n\nЯ особисто зв'яжусь з вами, щоб обговорити ваш об'єкт та надати найкращі умови.\n\nЗ повагою, керівник виробництва.`);
+          } else {
+            alert(`🔥 Заявка для EUROGUMA успішно надійшла керівнику!\n\nЯ особисто зателефоную вам для підтвердження замовлення!`);
+          }
+        } else {
+          alert('❌ Сталася помилка при отправці в Telegram. Спробуйте ще раз.');
+        }
+      })
+      .catch(error => {
+        console.error("Помилка мережі:", error);
+        alert('❌ Помилка з\'єднання. Перевірте інтернет.');
+      });
+
+    } else if (messenger === 'Viber') {
+      const BOSS_VIBER_PHONE = "380632923975"; 
+      const cleanTextForViber = messageText.replace(/<\/?[^>]+(>|$)/g, "");
+      const encodedText = encodeURIComponent(cleanTextForViber);
+      const viberUrl = `viber://chat?number=${BOSS_VIBER_PHONE}&draft=${encodedText}`;
+      window.location.href = viberUrl;
+      alert('📱 Відкриваємо Viber... Будь ласка, натисніть кнопку "Надіслати" у чаті з керівником, щоб підтвердити вашу заявку!');
     }
   };
 
