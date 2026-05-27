@@ -91,14 +91,22 @@ export default function App() {
   const formatPhoneNumber = (value: string) => {
     const digits = value.replace(/\D/g, '');
     
+    // Clear field completely if the only digits are the "+38" prefix digits
+    if (digits === '38' || digits === '3' || digits === '') {
+      return '';
+    }
+    
     let local = digits;
     if (digits.startsWith('380')) {
       local = digits.slice(2); // slice off "38" to make it "0..."
     } else if (digits.startsWith('80') && digits.length > 2) {
       local = '0' + digits.slice(2); // replace "80..." with "0..."
-    } else if (!digits.startsWith('0') && digits.length > 0) {
+    } else if (!digits.startsWith('0')) {
       local = '0' + digits; // prepend '0' if they type without it
     }
+    
+    // Cap at 10 digits
+    local = local.slice(0, 10);
     
     const part0 = local.slice(0, 3); // 0XX
     const part1 = local.slice(3, 6); // XXX
@@ -111,6 +119,7 @@ export default function App() {
     if (local.length <= 8) return `+38 (${part0}) ${part1}-${part2}`;
     return `+38 (${part0}) ${part1}-${part2}-${part3}`;
   };
+
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (v: string) => void) => {
     const formatted = formatPhoneNumber(e.target.value);
