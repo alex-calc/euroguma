@@ -36,6 +36,23 @@ export default function App() {
   const [phone, setPhone] = useState<string>('');
   const [footerPhone, setFooterPhone] = useState<string>('');
 
+  // UTM parameters capture for analytics
+  const [utmSource] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('utm_source') || 'direct';
+    }
+    return 'direct';
+  });
+
+  const [utmCampaign] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('utm_campaign') || 'organic';
+    }
+    return 'organic';
+  });
+
   const [activityIndex, setActivityIndex] = useState(0);
 
   const activities = (t('header.ticker', { returnObjects: true }) as string[]) || [];
@@ -162,6 +179,11 @@ export default function App() {
                     `🏗️ <b>${t('payload.base')}:</b> ${baseType === 'concrete' ? t('payload.baseConcrete') : t('payload.baseGround')}\n` +
                     `💰 <b>${t('payload.cost')}:</b> ${total.toLocaleString('uk-UA')} ₴`;
     }
+
+    // Додаємо UTM-мітки для аналітики
+    messageText += `\n\n📊 <b>${t('payload.analytics')}</b>\n` +
+                   `🔸 <b>Source:</b> ${utmSource}\n` +
+                   `🔸 <b>Campaign:</b> ${utmCampaign}`;
 
     const redirectToThankYou = () => {
       const targetThankYouPath = i18n.language.startsWith('ru') ? '/ru/thank-you' : '/thank-you';
@@ -315,7 +337,7 @@ export default function App() {
         </div>
       </div>
 
-      <header className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex justify-between items-center bg-transparent relative z-20">
+      <header className="max-w-7xl mx-auto px-2 sm:px-6 py-5 flex justify-between items-center bg-transparent relative z-20">
         
         {/* ФІРМОВИЙ ЛОГОТИП */}
         <div className="flex items-center gap-3 cursor-pointer group">
@@ -335,13 +357,13 @@ export default function App() {
           <a href="#specs" className="hover:text-blue-600 transition-colors">{t('header.nav.specs')}</a>
         </div>
 
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-1.5 sm:gap-3 items-center">
           {/* LANGUAGE SWITCHER */}
           <div className="flex bg-white/95 border border-slate-200 rounded-xl p-1 shadow-sm text-[11px] font-black gap-0.5">
             <button 
               type="button"
               onClick={() => changeLanguage('uk')}
-              className={`px-2.5 py-1.5 rounded-lg transition-all ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg transition-all ${
                 i18n.language.startsWith('uk')
                   ? 'bg-blue-600 text-white shadow-sm' 
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -352,7 +374,7 @@ export default function App() {
             <button 
               type="button"
               onClick={() => changeLanguage('ru')}
-              className={`px-2.5 py-1.5 rounded-lg transition-all ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg transition-all ${
                 i18n.language.startsWith('ru')
                   ? 'bg-blue-600 text-white shadow-sm' 
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -370,11 +392,11 @@ export default function App() {
             {t('header.cooperation')}
           </button>
           
-          <a href="tel:+380632923975" className="bg-slate-900 hover:bg-blue-600 text-white px-5 py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
-            <div className="flex items-center gap-2 text-sm font-bold">
-              <span>📞</span> <span>(063) 292-39-75</span>
+          <a href="tel:+380632923975" className="bg-slate-900 hover:bg-blue-600 text-white p-2.5 sm:px-5 sm:py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
+            <div className="flex items-center gap-1.5 sm:gap-2 text-sm font-bold">
+              <span>📞</span> <span className="hidden sm:inline">(063) 292-39-75</span>
             </div>
-            <div className="text-[9px] text-blue-300 font-medium uppercase tracking-wider mt-0.5">{t('header.bossLine')}</div>
+            <div className="hidden sm:block text-[9px] text-blue-300 font-medium uppercase tracking-wider mt-0.5">{t('header.bossLine')}</div>
           </a>
         </div>
       </header>
