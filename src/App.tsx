@@ -399,7 +399,7 @@ export default function App() {
       </header>
 
       {/* 🚀 HERO */}
-      <section className="relative w-full pt-12 pb-16 md:pt-20 md:pb-32 px-4 text-center min-h-[50vh] md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden">
+      <section className="relative w-full pt-8 pb-8 md:pt-20 md:pb-32 px-4 text-center md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden">
         <div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105 animate-[pulse_20s_ease-in-out_infinite]"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop')" }}
