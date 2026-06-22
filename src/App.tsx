@@ -878,6 +878,24 @@ export default function App() {
         </div>
       </footer>
 
+      {/* MOBILE STICKY BOTTOM BAR */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-4 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.4)] flex justify-between items-center" style={{ paddingBottom: 'calc(max(env(safe-area-inset-bottom), 1rem))' }}>
+        <div>
+          <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t('calc.totalCost')}</div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-2xl font-black text-white">{total.toLocaleString('uk-UA')}</span>
+            <span className="text-xs text-blue-400 font-bold">{t('calc.uah')}</span>
+          </div>
+        </div>
+        <button 
+          type="button"
+          onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-black text-sm py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95 transition-all border border-blue-500/50"
+        >
+          {t('hero.btnCalc')}
+        </button>
+      </div>
+
     </div>
   );
 }
