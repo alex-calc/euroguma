@@ -436,44 +436,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section className="bg-white border-b border-slate-200 py-10 relative z-20 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
-          {[
-            { value: "10+", label: t('stats.years') },
-            { value: "500+", label: t('stats.objects') },
-            { value: "15 000", label: t('stats.produced') },
-            { value: "100%", label: t('stats.dstu') }
-          ].map((stat, i) => (
-            <div key={i} className="text-center px-4">
-              <div className="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter mb-1">{stat.value}</div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* СФЕРИ ЗАСТОСУВАННЯ */}
-      <section id="applications" className="max-w-6xl mx-auto px-4 py-12 md:py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('apps.heading')}</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: "⚽", title: t('apps.items.playgrounds.title'), desc: t('apps.items.playgrounds.desc') },
-            { icon: "🏋️", title: t('apps.items.gyms.title'), desc: t('apps.items.gyms.desc') },
-            { icon: "🏡", title: t('apps.items.terraces.title'), desc: t('apps.items.terraces.desc') },
-            { icon: "🚗", title: t('apps.items.garages.title'), desc: t('apps.items.garages.desc') }
-          ].map((app, i) => (
-            <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl text-center transform transition-all duration-300 hover:-translate-y-2 group">
-              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{app.icon}</div>
-              <div className="font-black text-slate-900 text-base mb-2">{app.title}</div>
-              <div className="text-sm text-slate-500 font-medium">{app.desc}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* КОМПАКТНИЙ PREMIUM КАЛЬКУЛЯТОР */}
       <section id="calculator" className="bg-slate-900 py-16 px-4 relative overflow-hidden border-t border-slate-800">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
@@ -614,7 +576,7 @@ export default function App() {
               <div className="bg-white/5 border border-white/10 p-5 rounded-2xl transform hover:scale-[1.02] transition-all">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-[10px] font-bold text-slate-400 block tracking-wider uppercase">{t('calc.totalCost')}</span>
-                  <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">
+                  <span className="bg-green-500/20 text-green-400 border border-green-400/50 px-3 py-1 rounded-md text-sm md:text-base font-black uppercase tracking-widest shadow-[0_0_20px_rgba(74,222,128,0.4)]">
                     {pricePerMeter} {t('calc.pricePerMeter')}
                   </span>
                 </div>
@@ -659,6 +621,46 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* SOCIAL PROOF */}
+      <section className="bg-white border-b border-slate-200 py-10 relative z-20 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-slate-100">
+          {[
+            { value: "10+", label: t('stats.years') },
+            { value: "500+", label: t('stats.objects') },
+            { value: "15 000", label: t('stats.produced') },
+            { value: "100%", label: t('stats.dstu') }
+          ].map((stat, i) => (
+            <div key={i} className="text-center px-4">
+              <div className="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter mb-1">{stat.value}</div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* СФЕРИ ЗАСТОСУВАННЯ */}
+      <section id="applications" className="max-w-6xl mx-auto px-4 py-12 md:py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('apps.heading')}</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: "⚽", title: t('apps.items.playgrounds.title'), desc: t('apps.items.playgrounds.desc') },
+            { icon: "🏋️", title: t('apps.items.gyms.title'), desc: t('apps.items.gyms.desc') },
+            { icon: "🏡", title: t('apps.items.terraces.title'), desc: t('apps.items.terraces.desc') },
+            { icon: "🚗", title: t('apps.items.garages.title'), desc: t('apps.items.garages.desc') }
+          ].map((app, i) => (
+            <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl text-center transform transition-all duration-300 hover:-translate-y-2 group">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{app.icon}</div>
+              <div className="font-black text-slate-900 text-base mb-2">{app.title}</div>
+              <div className="text-sm text-slate-500 font-medium">{app.desc}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
 
       {/* LEAD MAGNET */}
       <section id="sample" className="bg-blue-600 text-white py-16 px-4 relative overflow-hidden border-t border-blue-500">
