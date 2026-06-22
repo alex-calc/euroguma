@@ -32,7 +32,6 @@ export default function App() {
   const [baseType, setBaseType] = useState<string>('concrete'); 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   
-  const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [footerPhone, setFooterPhone] = useState<string>('');
 
@@ -170,7 +169,6 @@ export default function App() {
                     `<i>${t('payload.coopNote')}</i>`;
     } else {
       messageText = `🔥 <b>${t('payload.orderRequest')}</b>\n\n` +
-                    `👤 <b>${t('payload.client')}:</b> ${name || t('payload.notSpecified')}\n` +
                     `📱 <b>${t('payload.phone')}:</b> ${currentPhone}\n` +
                     `💬 <b>${t('payload.messenger')}:</b> ${messenger}\n\n` +
                     `📐 <b>${t('payload.area')}:</b> ${area} м²\n` +
@@ -191,7 +189,6 @@ export default function App() {
       setPath(targetThankYouPath);
       
       // Reset fields
-      setName('');
       setPhone('');
       setFooterPhone('');
     };
@@ -266,7 +263,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
         {/* HEADER Ticker */}
-        <div className="bg-blue-700 text-white text-xs md:text-sm font-semibold py-2.5 px-4 text-center shadow-md">
+        <div className="hidden md:block bg-blue-700 text-white text-sm font-semibold py-2.5 px-4 text-center shadow-md">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
             <span className="inline-block animate-pulse text-blue-200">⚡</span>
             <span className="transition-all duration-500 font-medium tracking-wide">
@@ -328,7 +325,7 @@ export default function App() {
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white scroll-smooth">
       
       {/* HEADER Ticker */}
-      <div className="bg-blue-700 text-white text-xs md:text-sm font-semibold py-2.5 px-4 text-center sticky top-0 z-50 shadow-md">
+      <div className="hidden md:block bg-blue-700 text-white text-sm font-semibold py-2.5 px-4 text-center sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
           <span className="inline-block animate-pulse text-blue-200">⚡</span>
           <span className="transition-all duration-500 font-medium tracking-wide">
@@ -402,7 +399,7 @@ export default function App() {
       </header>
 
       {/* 🚀 HERO */}
-      <section className="relative w-full pt-20 pb-32 px-4 text-center min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden">
+      <section className="relative w-full pt-12 pb-16 md:pt-20 md:pb-32 px-4 text-center min-h-[50vh] md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden">
         <div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105 animate-[pulse_20s_ease-in-out_infinite]"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop')" }}
@@ -457,7 +454,7 @@ export default function App() {
       </section>
 
       {/* СФЕРИ ЗАСТОСУВАННЯ */}
-      <section id="applications" className="max-w-6xl mx-auto px-4 py-24">
+      <section id="applications" className="max-w-6xl mx-auto px-4 py-12 md:py-24">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('apps.heading')}</h2>
         </div>
@@ -649,10 +646,6 @@ export default function App() {
             <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-3 relative z-10 mt-8">
               <h4 className="text-[11px] font-black text-white text-center uppercase tracking-wider mb-2">{t('calc.orderDirect')}</h4>
               <input 
-                type="text" placeholder={t('calc.namePlaceholder')} value={name} onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
-              />
-              <input 
                 type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => handlePhoneChange(e, setPhone)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
@@ -705,7 +698,7 @@ export default function App() {
       </section>
 
       {/* ГАЛЕРЕЯ */}
-      <section id="gallery" className="max-w-7xl mx-auto px-4 py-24 border-t border-slate-200">
+      <section id="gallery" className="max-w-7xl mx-auto px-4 py-12 md:py-24 border-t border-slate-200">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('gallery.title')}</h2>
           <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">{t('gallery.desc')}</p>
@@ -744,7 +737,7 @@ export default function App() {
       </section>
 
       {/* ТЕХНІЧНІ ХАРАКТЕРИСТИКИ */}
-      <section id="specs" className="bg-slate-100 py-24 px-4 border-t border-slate-200">
+      <section id="specs" className="bg-slate-100 py-12 md:py-24 px-4 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('specs.title')}</h2>
@@ -802,7 +795,7 @@ export default function App() {
       </section>
 
       {/* ЕТАПИ РОБОТИ */}
-      <section className="bg-slate-900 text-white py-24 px-4 border-t border-slate-800">
+      <section className="bg-slate-900 text-white py-12 md:py-24 px-4 border-t border-slate-800">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t('steps.title')}</h2>
@@ -820,7 +813,7 @@ export default function App() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="max-w-4xl mx-auto px-4 py-24">
+      <section id="faq" className="max-w-4xl mx-auto px-4 py-12 md:py-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900">{t('faq.title')}</h2>
         </div>
