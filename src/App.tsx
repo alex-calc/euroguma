@@ -26,7 +26,7 @@ export default function App() {
   const { t, i18n } = useTranslation();
 
   const [path, setPath] = useState<string>(window.location.pathname);
-  const [area, setArea] = useState<number>(40);
+  const [area, setArea] = useState<number>(20);
   const [thickness, setThickness] = useState<number>(2);
   const [selectedColor, setSelectedColor] = useState<string>('black');
   const [baseType, setBaseType] = useState<string>('concrete'); 
@@ -836,8 +836,10 @@ export default function App() {
                 <span className={`text-blue-600 text-xl font-black transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`}>+</span>
               </button>
               {openFaq === i && (
-                <div className="px-6 pb-6 text-sm text-slate-600 font-medium leading-relaxed border-t border-slate-100 pt-4">
-                  {faq.a}
+                <div className="px-6 pb-6 text-sm text-slate-600 font-medium leading-relaxed border-t border-slate-100 pt-4 space-y-3">
+                  {faq.a.split('\n').map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
+                  ))}
                 </div>
               )}
             </div>
@@ -886,13 +888,16 @@ export default function App() {
             <span className="text-2xl font-black text-white">{total.toLocaleString('uk-UA')}</span>
             <span className="text-xs text-blue-400 font-bold">{t('calc.uah')}</span>
           </div>
+          <div className="text-[10px] font-medium text-slate-300 mt-0.5">
+            ({pricePerMeter} {t('calc.pricePerMeter')})
+          </div>
         </div>
         <button 
           type="button"
           onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
           className="bg-blue-600 hover:bg-blue-500 text-white font-black text-sm py-3 px-6 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95 transition-all border border-blue-500/50"
         >
-          {t('hero.btnCalc')}
+          {t('calc.btnOrderSticky')}
         </button>
       </div>
 
