@@ -875,14 +875,12 @@ export default function App() {
 
       {/* MOBILE STICKY BOTTOM BAR */}
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-4 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.4)] flex justify-between items-center" style={{ paddingBottom: 'calc(max(env(safe-area-inset-bottom), 1rem))' }}>
-        <div>
-          <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{t('calc.totalCost')}</div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-2xl font-black text-white">{total.toLocaleString('uk-UA')}</span>
-            <span className="text-xs text-blue-400 font-bold">{t('calc.uah')}</span>
+        <div className="flex flex-col">
+          <div className="text-2xl font-black text-green-400 tracking-tight drop-shadow-sm flex items-baseline gap-1">
+            {pricePerMeter} <span className="text-sm font-bold text-green-400/80">{t('calc.pricePerMeter')}</span>
           </div>
-          <div className="text-[10px] font-medium text-slate-300 mt-0.5">
-            ({pricePerMeter} {t('calc.pricePerMeter')})
+          <div className="text-[11px] text-slate-400 font-medium mt-0.5">
+            {i18n.language.startsWith('uk') ? `Разом за ${area} м²:` : `Итого за ${area} м²:`} <span className="text-slate-200 font-bold">{total.toLocaleString('uk-UA')} грн</span>
           </div>
         </div>
         <button 
