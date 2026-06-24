@@ -149,8 +149,12 @@ export default function App() {
 
   const handleLeadSubmit = (messenger: 'Telegram' | 'Viber' | 'Сайт', formType: 'Замовлення' | 'Зразок' | 'Опт' = 'Замовлення', isFooter = false) => {
     const currentPhone = isFooter ? footerPhone : phone;
-    if (!currentPhone.trim()) return alert(t('validation.enterPhone'));
-    if (!validateUkrainianPhone(currentPhone)) return alert(t('validation.invalidPhone'));
+    
+    // Якщо це месенджер, ігноруємо валідацію і переходимо до відправки
+    if (messenger === 'Сайт') {
+      if (!currentPhone.trim()) return alert(t('validation.enterPhone'));
+      if (!validateUkrainianPhone(currentPhone)) return alert(t('validation.invalidPhone'));
+    }
     
     const colorName = t(`colors.${selectedColor}`);
     
@@ -194,7 +198,17 @@ export default function App() {
     };
 
     // Відправка
-    if (messenger === 'Telegram' || messenger === 'Сайт') {
+    if (messenger === 'Telegram' || messenger === 'Viber') {
+      // Ігноруємо валідацію і просто перекидаємо у месенджер
+      if (messenger === 'Telegram') {
+        window.open('https://t.me/+380973160364', '_blank');
+      } else {
+        window.open('viber://chat?number=380973160364', '_blank');
+      }
+      return;
+    }
+
+    if (messenger === 'Сайт') {
       const TELEGRAM_TOKEN = "8738176172:AAGmNEziZBwzwV1Lfd0j2cLukMzExGCT6g4";
       const CHAT_ID = "1142060901";
       const URI_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
@@ -219,15 +233,6 @@ export default function App() {
         console.error("Помилка мережі:", error);
         alert(t('notifications.networkError'));
       });
-
-    } else if (messenger === 'Viber') {
-      const BOSS_VIBER_PHONE = "380973160364"; 
-      const cleanTextForViber = messageText.replace(/<\/?[^>]+(>|$)/g, "");
-      const encodedText = encodeURIComponent(cleanTextForViber);
-      const viberUrl = `viber://chat?number=${BOSS_VIBER_PHONE}&draft=${encodedText}`;
-      window.location.href = viberUrl;
-      redirectToThankYou();
-      alert(t('notifications.viberOpenAlert'));
     }
   };
 
@@ -497,7 +502,7 @@ export default function App() {
                       >
                         <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
                         {selectedColor === c.id && <span className="text-white drop-shadow-md text-sm font-black relative z-10">✓</span>}
-                        <span className={`text-[9px] font-bold mt-1 relative z-10 ${c.id === 'green' ? 'text-white' : 'text-slate-600'}`}>{t(`colors.${c.id}`)}</span>
+                        <span className={`text-[9px] font-bold mt-1 relative z-10 text-white`}>{t(`colors.${c.id}`)}</span>
                       </button>
                     ))}
                   </div>
@@ -706,6 +711,13 @@ export default function App() {
                 aria-label={t('calc.phonePlaceholder')}
                 className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-50 mb-4 placeholder-slate-400 transition-colors"
               />
+              <button 
+                type="button" 
+                onClick={() => handleLeadSubmit('Сайт', 'Зразок', true)} 
+                className="w-full bg-blue-600 hover:bg-blue-500 py-3.5 rounded-xl font-black text-sm text-white transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95 mb-4"
+              >
+                {t('lead.sample.btnSubmitSample')}
+              </button>
               <div className="grid grid-cols-2 gap-2">
                 <button type="button" onClick={() => handleLeadSubmit('Telegram', 'Зразок', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Telegram</button>
                 <button type="button" onClick={() => handleLeadSubmit('Viber', 'Зразок', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Viber</button>
@@ -920,6 +932,13 @@ export default function App() {
               aria-label={t('calc.phonePlaceholder')}
               className="w-full px-5 py-4 rounded-xl border-2 border-slate-700 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-800 text-white placeholder-slate-500 shadow-inner transition-colors relative z-10"
             />
+            <button 
+              type="button" 
+              onClick={() => handleLeadSubmit('Сайт', 'Опт', true)} 
+              className="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-sm md:text-base text-white transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95 relative z-10"
+            >
+              {t('footer.btnSubmitFooter')}
+            </button>
             <div className="grid grid-cols-2 gap-3 relative z-10">
               <button type="button" onClick={() => handleLeadSubmit('Telegram', 'Опт', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">✈️ Telegram</button>
               <button type="button" onClick={() => handleLeadSubmit('Viber', 'Опт', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3.5 rounded-xl font-black text-xs transition-all active:scale-95 shadow-lg">📞 Viber</button>
