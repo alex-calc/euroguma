@@ -403,7 +403,7 @@ export default function App() {
         <div className="absolute inset-0 w-full h-full aurora-bg z-0 pointer-events-none">
           <div className="aurora-blob"></div>
         </div>
-        <div className="absolute inset-0 z-0 bg-slate-950/20 backdrop-blur-[1px] pointer-events-none"></div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-slate-950/40 to-slate-950 pointer-events-none"></div>
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-8 mt-4">
           <div className="inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-md text-blue-400 px-5 py-2 rounded-full text-xs font-black border border-slate-700/50 uppercase tracking-widest shadow-2xl">
