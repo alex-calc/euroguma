@@ -399,12 +399,11 @@ export default function App() {
       </header>
 
       {/* 🚀 HERO */}
-      <section className="relative w-full pt-8 pb-8 md:pt-20 md:pb-32 px-4 text-center md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105 animate-[pulse_20s_ease-in-out_infinite]"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop')" }}
-        ></div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-slate-900/95 via-slate-900/80 to-slate-950/95"></div>
+      <section className="relative w-full pt-8 pb-8 md:pt-20 md:pb-32 px-4 text-center md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden bg-slate-950">
+        <div className="aurora-bg z-0">
+          <div className="aurora-blob"></div>
+        </div>
+        <div className="absolute inset-0 z-0 bg-slate-950/40 backdrop-blur-[2px]"></div>
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-8 mt-4">
           <div className="inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-md text-blue-400 px-5 py-2 rounded-full text-xs font-black border border-slate-700/50 uppercase tracking-widest shadow-2xl">
