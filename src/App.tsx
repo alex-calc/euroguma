@@ -399,6 +399,7 @@ export default function App() {
       </header>
 
       {/* 🚀 HERO */}
+      <main>
       <section className="relative w-full pt-8 pb-8 md:pt-20 md:pb-32 px-4 text-center md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden bg-slate-950">
         <div className="absolute inset-0 w-full h-full aurora-bg z-0 pointer-events-none">
           <div className="aurora-blob"></div>
@@ -465,7 +466,7 @@ export default function App() {
                     style={{ backgroundColor: currentColorObj.hex }}
                   >
                     {/* Текстова заглушка (видно, якщо немає фото) */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white/60 font-bold z-0 mix-blend-overlay pointer-events-none">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white/80 font-bold z-0 mix-blend-overlay pointer-events-none">
                         <span className="text-[10px] uppercase tracking-widest mb-1">{t('calc.photoPlaceholder')}</span>
                         <span className="text-sm">{t(`colors.${currentColorObj.id}`)} {thickness === 1 ? '20мм' : '30мм'}</span>
                     </div>
@@ -495,7 +496,7 @@ export default function App() {
                       >
                         <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
                         {selectedColor === c.id && <span className="text-white drop-shadow-md text-sm font-black relative z-10">✓</span>}
-                        <span className={`text-[9px] font-bold mt-1 relative z-10 ${c.id === 'green' ? 'text-white' : 'text-slate-400'}`}>{t(`colors.${c.id}`)}</span>
+                        <span className={`text-[9px] font-bold mt-1 relative z-10 ${c.id === 'green' ? 'text-white' : 'text-slate-600'}`}>{t(`colors.${c.id}`)}</span>
                       </button>
                     ))}
                   </div>
@@ -511,6 +512,7 @@ export default function App() {
                   </div>
                   <input 
                     type="range" min="5" max="300" value={area} 
+                    aria-label={t('calc.areaLabel')}
                     onChange={(e) => setArea(Number(e.target.value))}
                     className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 shadow-inner"
                   />
@@ -557,7 +559,7 @@ export default function App() {
                 </div>
                 
                 {/* Підказка експерта */}
-                <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-[10px] text-slate-500 font-medium leading-relaxed">
+                <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-[10px] text-slate-600 font-medium leading-relaxed">
                   <span className="font-bold text-blue-600">💡 {i18n.language.startsWith('uk') ? 'Зверніть увагу:' : 'Обратите внимание:'}</span> {t('calc.expertNote')}
                 </div>
             </div>
@@ -605,9 +607,10 @@ export default function App() {
             </div>
 
             <div className="bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl space-y-3 relative z-10 mt-8">
-              <h4 className="text-[11px] font-black text-white text-center uppercase tracking-wider mb-2">{t('calc.orderDirect')}</h4>
+              <h3 className="text-[11px] font-black text-white text-center uppercase tracking-wider mb-2">{t('calc.orderDirect')}</h3>
               <input 
                 type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => handlePhoneChange(e, setPhone)}
+                aria-label={t('calc.phonePlaceholder')}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
               <div className="pt-1 space-y-3">
@@ -619,11 +622,11 @@ export default function App() {
                   {t('calc.btnOrderCalc')}
                 </button>
                 <div className="text-center">
-                  <span className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">{t('calc.orMessenger')}</span>
+                  <span className="text-[10px] text-slate-300 font-medium uppercase tracking-widest">{t('calc.orMessenger')}</span>
                 </div>
                 <div className="flex justify-center gap-3">
-                  <button type="button" onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE]/20 hover:bg-[#2AABEE] text-[#2AABEE] hover:text-white border border-[#2AABEE]/30 py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">✈️ Telegram</button>
-                  <button type="button" onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2]/20 hover:bg-[#7360F2] text-[#7360F2] hover:text-white border border-[#7360F2]/30 py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">📞 Viber</button>
+                  <button type="button" onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE] hover:bg-[#2298D6] text-white py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">✈️ Telegram</button>
+                  <button type="button" onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2] hover:bg-[#5E4DCD] text-white py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">📞 Viber</button>
                 </div>
               </div>
             </div>
@@ -696,16 +699,17 @@ export default function App() {
             </ul>
           </div>
           <div className="md:w-1/2 w-full max-w-sm bg-white p-6 rounded-3xl shadow-2xl text-slate-800 mx-auto border-4 border-blue-400/30 transform hover:-translate-y-1 transition-transform duration-500">
-             <h4 className="text-lg font-black text-center mb-4">{t('lead.sample.btnTitle')}</h4>
+             <h3 className="text-lg font-black text-center mb-4">{t('lead.sample.btnTitle')}</h3>
              <input 
                 type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => handlePhoneChange(e, setFooterPhone)}
+                aria-label={t('calc.phonePlaceholder')}
                 className="w-full px-4 py-3.5 rounded-xl border-2 border-slate-200 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-50 mb-4 placeholder-slate-400 transition-colors"
               />
               <div className="grid grid-cols-2 gap-2">
                 <button type="button" onClick={() => handleLeadSubmit('Telegram', 'Зразок', true)} className="bg-[#2AABEE] hover:bg-[#2298D6] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Telegram</button>
                 <button type="button" onClick={() => handleLeadSubmit('Viber', 'Зразок', true)} className="bg-[#7360F2] hover:bg-[#5E4DCD] text-white py-3 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md">Viber</button>
               </div>
-              <div className="text-[10px] text-center text-slate-400 mt-4 font-medium">{t('lead.sample.note')}</div>
+              <div className="text-[10px] text-center text-slate-500 mt-4 font-medium">{t('lead.sample.note')}</div>
           </div>
         </div>
       </section>
@@ -893,6 +897,7 @@ export default function App() {
           ))}
         </div>
       </section>
+      </main>
 
       {/* ФУТЕР */}
       <footer id="footer" className="bg-slate-950 text-white pt-20 pb-10 px-4 text-center border-t border-slate-900 relative">
@@ -911,6 +916,7 @@ export default function App() {
             
             <input 
               type="tel" placeholder={t('calc.phonePlaceholder')} value={footerPhone} onChange={(e) => handlePhoneChange(e, setFooterPhone)}
+              aria-label={t('calc.phonePlaceholder')}
               className="w-full px-5 py-4 rounded-xl border-2 border-slate-700 text-sm font-bold focus:outline-none focus:border-blue-500 bg-slate-800 text-white placeholder-slate-500 shadow-inner transition-colors relative z-10"
             />
             <div className="grid grid-cols-2 gap-3 relative z-10">
