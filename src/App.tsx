@@ -147,7 +147,7 @@ export default function App() {
     return /^(38)?0\d{9}$/.test(cleaned);
   };
 
-  const handleLeadSubmit = (messenger: 'Telegram' | 'Viber', formType: 'Замовлення' | 'Зразок' | 'Опт' = 'Замовлення', isFooter = false) => {
+  const handleLeadSubmit = (messenger: 'Telegram' | 'Viber' | 'Сайт', formType: 'Замовлення' | 'Зразок' | 'Опт' = 'Замовлення', isFooter = false) => {
     const currentPhone = isFooter ? footerPhone : phone;
     if (!currentPhone.trim()) return alert(t('validation.enterPhone'));
     if (!validateUkrainianPhone(currentPhone)) return alert(t('validation.invalidPhone'));
@@ -194,7 +194,7 @@ export default function App() {
     };
 
     // Відправка
-    if (messenger === 'Telegram') {
+    if (messenger === 'Telegram' || messenger === 'Сайт') {
       const TELEGRAM_TOKEN = "8738176172:AAGmNEziZBwzwV1Lfd0j2cLukMzExGCT6g4";
       const CHAT_ID = "1142060901";
       const URI_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
@@ -221,7 +221,7 @@ export default function App() {
       });
 
     } else if (messenger === 'Viber') {
-      const BOSS_VIBER_PHONE = "380632923975"; 
+      const BOSS_VIBER_PHONE = "380973160364"; 
       const cleanTextForViber = messageText.replace(/<\/?[^>]+(>|$)/g, "");
       const encodedText = encodeURIComponent(cleanTextForViber);
       const viberUrl = `viber://chat?number=${BOSS_VIBER_PHONE}&draft=${encodedText}`;
@@ -389,9 +389,9 @@ export default function App() {
             {t('header.cooperation')}
           </button>
           
-          <a href="tel:+380632923975" className="bg-slate-900 hover:bg-blue-600 text-white p-2.5 sm:px-5 sm:py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
+          <a href="tel:+380973160364" className="bg-slate-900 hover:bg-blue-600 text-white p-2.5 sm:px-5 sm:py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1.5 sm:gap-2 text-sm font-bold">
-              <span>📞</span> <span className="hidden sm:inline">(063) 292-39-75</span>
+              <span>📞</span> <span className="hidden sm:inline">(097) 316-03-64</span>
             </div>
             <div className="hidden sm:block text-[9px] text-blue-300 font-medium uppercase tracking-wider mt-0.5">{t('header.bossLine')}</div>
           </a>
@@ -611,9 +611,21 @@ export default function App() {
                 type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => handlePhoneChange(e, setPhone)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
               />
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <button type="button" onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE] hover:bg-[#2298D6] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">✈️ Telegram</button>
-                <button type="button" onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2] hover:bg-[#5E4DCD] py-3 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95">📞 Viber</button>
+              <div className="pt-1 space-y-3">
+                <button 
+                  type="button" 
+                  onClick={() => handleLeadSubmit('Сайт')} 
+                  className="w-full bg-blue-600 hover:bg-blue-500 py-3.5 rounded-xl font-black text-sm md:text-base text-white transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95"
+                >
+                  {t('calc.btnOrderCalc')}
+                </button>
+                <div className="text-center">
+                  <span className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">{t('calc.orMessenger')}</span>
+                </div>
+                <div className="flex justify-center gap-3">
+                  <button type="button" onClick={() => handleLeadSubmit('Telegram')} className="bg-[#2AABEE]/20 hover:bg-[#2AABEE] text-[#2AABEE] hover:text-white border border-[#2AABEE]/30 py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">✈️ Telegram</button>
+                  <button type="button" onClick={() => handleLeadSubmit('Viber')} className="bg-[#7360F2]/20 hover:bg-[#7360F2] text-[#7360F2] hover:text-white border border-[#7360F2]/30 py-2 px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">📞 Viber</button>
+                </div>
               </div>
             </div>
             
