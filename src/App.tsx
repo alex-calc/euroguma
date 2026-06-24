@@ -814,6 +814,47 @@ export default function App() {
         </div>
       </section>
 
+      {/* ЛОГІСТИКА */}
+      <section className="bg-slate-950 py-12 md:py-20 px-4 border-t border-slate-800 relative overflow-hidden">
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl"></div>
+        
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="bg-slate-900/80 backdrop-blur-md rounded-3xl border border-slate-700/50 p-8 md:p-12 shadow-2xl">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="md:w-1/2 space-y-4 text-center md:text-left">
+                <div className="inline-block bg-blue-500/20 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-2">
+                  {t('logistics.badge')}
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
+                  {t('logistics.title')}
+                </h3>
+                <p className="text-slate-400 text-sm md:text-base font-medium leading-relaxed">
+                  {t('logistics.desc')}
+                </p>
+              </div>
+              
+              <div className="md:w-1/2 w-full bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 text-center md:text-left">
+                  {t('logistics.partnersTitle')}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                  <div className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 flex items-center justify-center shadow-inner">
+                    <span className="font-black text-white tracking-wider">{t('logistics.delivery').split(' (')[0]} <span className="text-blue-400 text-xs whitespace-nowrap">(Delivery)</span></span>
+                  </div>
+                  <div className="flex-1 bg-white/5 border border-white/10 rounded-xl py-3 px-4 flex items-center justify-center shadow-inner">
+                    <span className="font-black tracking-wider text-xl text-yellow-500 drop-shadow-sm">{t('logistics.sat')}</span>
+                  </div>
+                </div>
+                <div className="text-xs text-blue-200/70 font-medium leading-relaxed text-center md:text-left">
+                  <span className="text-blue-400 font-bold">💡</span> {t('logistics.partnersDesc')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="max-w-4xl mx-auto px-4 py-12 md:py-24">
         <div className="text-center mb-12">
