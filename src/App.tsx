@@ -313,7 +313,7 @@ export default function App() {
         <footer className="bg-slate-950 text-white py-6 px-4 text-center border-t border-slate-900 text-xs text-slate-500">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="font-medium">{t('footer.copyright')}</div>
-            <div className="font-bold text-slate-600 text-blue-900/50">White-Label Engine v4.15</div>
+            <div className="font-bold text-slate-700" aria-hidden="true">White-Label Engine v4.15</div>
           </div>
         </footer>
       </div>
@@ -493,6 +493,7 @@ export default function App() {
                         }`}
                         style={{ backgroundColor: c.hex }}
                         title={t(`colors.${c.id}`)}
+                        aria-label={t(`colors.${c.id}`)}
                       >
                         <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
                         {selectedColor === c.id && <span className="text-white drop-shadow-md text-sm font-black relative z-10">✓</span>}
@@ -734,11 +735,11 @@ export default function App() {
               <div className="h-64 overflow-hidden relative bg-slate-100 flex items-center justify-center">
                 <img 
                   src={item.src} 
-                  alt={`Obj ${index + 1}`} 
+                  alt={item.desc} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-400 text-sm font-bold">${t('gallery.photoWait')} ${index + 1}.webp</span>`;
+                    (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-500 text-sm font-bold">${t('gallery.photoWait')} ${index + 1}.webp</span>`;
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 transition-opacity duration-300"></div>
@@ -820,7 +821,7 @@ export default function App() {
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {stepsItems.map((s, i) => (
               <div key={i} className="bg-slate-800 p-8 rounded-3xl border border-slate-700 relative overflow-hidden transform transition hover:-translate-y-2 group">
-                <span className="text-7xl font-black text-white/5 absolute -top-2 -left-2 select-none z-0 group-hover:text-white/10 transition-colors">{s.step}</span>
+                <span className="text-7xl font-black text-white/5 absolute -top-2 -left-2 select-none z-0 group-hover:text-white/10 transition-colors" aria-hidden="true">{s.step}</span>
                 <div className="font-black text-xl mb-3 relative z-10">{s.title}</div>
                 <p className="text-sm text-slate-400 font-medium leading-relaxed relative z-10">{s.desc}</p>
               </div>
@@ -928,7 +929,7 @@ export default function App() {
 
           <div className="pt-10 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
             <div className="font-medium text-left">{t('footer.copyright')}</div>
-            <div className="font-bold text-slate-600 sm:text-right whitespace-nowrap text-blue-900/50">White-Label Engine v4.15</div>
+            <div className="font-bold text-slate-700 sm:text-right whitespace-nowrap" aria-hidden="true">White-Label Engine v4.15</div>
           </div>
         </div>
       </footer>
