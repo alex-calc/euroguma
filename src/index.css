@@ -38,13 +38,15 @@
 .aurora-bg .aurora-blob {
   content: "";
   position: absolute;
-  filter: blur(90px);
-  opacity: 0.6;
+  /* Removed heavy filter: blur() to drastically improve PageSpeed / Total Blocking Time */
+  opacity: 0.7;
   border-radius: 50%;
   animation-duration: 25s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
   mix-blend-mode: screen;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .aurora-bg::before {
