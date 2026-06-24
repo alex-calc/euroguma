@@ -400,10 +400,10 @@ export default function App() {
 
       {/* 🚀 HERO */}
       <section className="relative w-full pt-8 pb-8 md:pt-20 md:pb-32 px-4 text-center md:min-h-[75vh] flex flex-col justify-center border-b border-slate-900 overflow-hidden bg-slate-950">
-        <div className="aurora-bg z-0">
+        <div className="absolute inset-0 w-full h-full aurora-bg z-0 pointer-events-none">
           <div className="aurora-blob"></div>
         </div>
-        <div className="absolute inset-0 z-0 bg-slate-950/40 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 z-0 bg-slate-950/20 backdrop-blur-[1px] pointer-events-none"></div>
 
         <div className="relative z-10 max-w-5xl mx-auto space-y-8 mt-4">
           <div className="inline-flex items-center gap-2 bg-slate-800/80 backdrop-blur-md text-blue-400 px-5 py-2 rounded-full text-xs font-black border border-slate-700/50 uppercase tracking-widest shadow-2xl">
