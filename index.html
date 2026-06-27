@@ -1,13 +1,26 @@
 <!doctype html>
 <html lang="uk">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MMWWQQMP');</script>
-    <!-- End Google Tag Manager -->
+    <!-- Deferred Google Tag Manager -->
+    <script>
+      let gtmLoaded = false;
+      function loadGTM() {
+        if (gtmLoaded) return;
+        gtmLoaded = true;
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MMWWQQMP');
+      }
+      // Завантажуємо GTM при першій взаємодії користувача
+      ['mouseover', 'click', 'scroll', 'touchstart'].forEach(function(e) {
+        window.addEventListener(e, loadGTM, { once: true });
+      });
+      // Або примусово через 4 секунди (якщо взаємодій не було)
+      setTimeout(loadGTM, 4000);
+    </script>
+    <!-- End Deferred Google Tag Manager -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
