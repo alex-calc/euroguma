@@ -237,7 +237,7 @@ export default function App() {
   };
 
   const currentColorObj = COLORS.find(c => c.id === selectedColor) || COLORS[0];
-  const imageFileName = `/${selectedColor}_${thickness === 1 ? '20' : '30'}.jpg`;
+  const imageFileName = `/${selectedColor}_${thickness === 1 ? '20' : '30'}.webp`;
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
