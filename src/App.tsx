@@ -520,8 +520,15 @@ export default function App() {
                     type="range" min="5" max="300" value={area} 
                     aria-label={t('calc.areaLabel')}
                     onChange={(e) => setArea(Number(e.target.value))}
-                    className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600 shadow-inner"
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white hover:[&::-webkit-slider-thumb]:scale-110 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:bg-blue-600 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white hover:[&::-moz-range-thumb]:scale-110"
                   />
+                  <div className="flex justify-between px-1 mt-2 text-[10px] text-slate-400 font-bold">
+                    <span>5</span>
+                    <span>50</span>
+                    <span>100</span>
+                    <span>200</span>
+                    <span>300</span>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
