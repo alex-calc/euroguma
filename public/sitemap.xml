@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://rezinova-plitka.com.ua/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <loc>https://rezinova-plitka.com.ua</loc>
+    <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua" />
   </url>
   <url>
     <loc>https://rezinova-plitka.com.ua/ru</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua" />
+  </url>
+  <url>
+    <loc>https://rezinova-plitka.com.ua/thank-you</loc>
+    <lastmod>2026-07-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru/thank-you" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua/thank-you" />
+  </url>
+  <url>
+    <loc>https://rezinova-plitka.com.ua/ru/thank-you</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru/thank-you" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua/thank-you" />
   </url>
 </urlset>
