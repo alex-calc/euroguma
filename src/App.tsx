@@ -408,7 +408,7 @@ export default function App() {
 
           <button 
             type="button"
-            onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' })}
             className="hidden md:block bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm"
           >
             {t('header.cooperation')}
