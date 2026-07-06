@@ -197,8 +197,27 @@ export default function App() {
       setFooterPhone('');
     };
 
+    // Tracking Helper: Отправка ценности конверсии (маржа 10%) в GA4
+    const trackConversion = () => {
+      if (formType === 'Замовлення') {
+        const profitMargin = total * 0.10;
+        if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+          (window as any).gtag('event', 'generate_lead', {
+            value: profitMargin,
+            currency: 'UAH'
+          });
+        }
+      } else {
+        // Для 'Зразок' или 'Опт' можно отправлять без ценности или с фиксированной
+        if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+          (window as any).gtag('event', 'generate_lead');
+        }
+      }
+    };
+
     // Відправка
     if (messenger === 'Telegram' || messenger === 'Viber') {
+      trackConversion();
       // Ігноруємо валідацію і просто перекидаємо у месенджер
       if (messenger === 'Telegram') {
         window.open('https://t.me/+380973160364', '_blank');
@@ -224,6 +243,7 @@ export default function App() {
       })
       .then(response => {
         if (response.ok) {
+          trackConversion();
           redirectToThankYou();
         } else {
           alert(t('notifications.telegramError'));
