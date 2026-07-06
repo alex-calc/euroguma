@@ -202,7 +202,7 @@ export default function App() {
       if (formType === 'Замовлення') {
         const profitMargin = total * 0.10;
         if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-          (window as any).gtag('event', 'generate_lead', {
+          (window as any).gtag('event', 'ads_conversion_SUBMIT_LEAD_FORM_1', {
             value: profitMargin,
             currency: 'UAH'
           });
@@ -210,7 +210,7 @@ export default function App() {
       } else {
         // Для 'Зразок' или 'Опт' можно отправлять без ценности или с фиксированной
         if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-          (window as any).gtag('event', 'generate_lead');
+          (window as any).gtag('event', 'ads_conversion_SUBMIT_LEAD_FORM_1');
         }
       }
     };
