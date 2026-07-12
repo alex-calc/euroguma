@@ -197,21 +197,14 @@ export default function App() {
       setFooterPhone('');
     };
 
-    // Tracking Helper: Отправка ценности конверсии (маржа 10%) в GA4
+    // Tracking Helper: Отправка конверсии в Google Ads
     const trackConversion = () => {
-      if (formType === 'Замовлення') {
-        const profitMargin = total * 0.10;
-        if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-          (window as any).gtag('event', 'ads_conversion_SUBMIT_LEAD_FORM_1', {
-            value: profitMargin,
-            currency: 'UAH'
-          });
-        }
-      } else {
-        // Для 'Зразок' или 'Опт' можно отправлять без ценности или с фиксированной
-        if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-          (window as any).gtag('event', 'ads_conversion_SUBMIT_LEAD_FORM_1');
-        }
+      if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'conversion', {
+          'send_to': 'AW-18279837422/EewdCJ3X_84cEO7dwIxE',
+          'value': 1.0,
+          'currency': 'UAH'
+        });
       }
     };
 
