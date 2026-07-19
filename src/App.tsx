@@ -197,9 +197,18 @@ export default function App() {
       setFooterPhone('');
     };
 
-    // Tracking Helper: Отправка конверсии в Google Ads
+    // Tracking Helper: Отправка конверсии в Google Ads и GA4
     const trackConversion = () => {
       if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+        // 1. GA4 Стандартная регистрация лида
+        (window as any).gtag('event', 'generate_lead', {
+          form_type: formType,
+          messenger: messenger,
+          value: formType === 'Замовлення' ? total * 0.10 : 0,
+          currency: 'UAH'
+        });
+
+        // 2. Google Ads Конверсия
         (window as any).gtag('event', 'conversion', {
           'send_to': 'AW-18279837422/EewdCJ3X_84cEO7dwIxE',
           'value': 1.0,
