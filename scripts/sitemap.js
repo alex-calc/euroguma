@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = 'https://rezinova-plitka.com.ua';
+const BASE_URL = 'https://www.rezinova-plitka.com.ua';
 
 // В данном SPA (калькуляторе) есть только главная страница и страница Thank You.
 // Если в будущем появятся категории, статьи или товары, их URL нужно добавить в этот массив.
