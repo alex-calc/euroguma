@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.rezinova-plitka.com.ua/sitemap.xml
+Sitemap: https://rezinova-plitka.com.ua/sitemap.xml
