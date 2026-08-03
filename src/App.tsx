@@ -151,6 +151,12 @@ export default function App() {
   const handlePhoneClick = () => {
     if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'click_phone');
+      // Прямая отправка конверсии в Google Ads (чтобы не ждать Аналитику)
+      (window as any).gtag('event', 'conversion', {
+        'send_to': 'AW-18279837422/EewdCJ3X_84cEO7dwIxE',
+        'value': 1.0,
+        'currency': 'UAH'
+      });
     }
     if (typeof window !== 'undefined') {
       (window as any).dataLayer = (window as any).dataLayer || [];
