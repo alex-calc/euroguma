@@ -147,6 +147,17 @@ export default function App() {
     return /^(38)?0\d{9}$/.test(cleaned);
   };
 
+  // Обробник кліку по телефону
+  const handlePhoneClick = () => {
+    if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'click_phone');
+    }
+    if (typeof window !== 'undefined') {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({ event: 'click_phone' });
+    }
+  };
+
   const handleLeadSubmit = (messenger: 'Telegram' | 'Viber' | 'Сайт', formType: 'Замовлення' | 'Зразок' | 'Опт' = 'Замовлення', isFooter = false) => {
     const currentPhone = isFooter ? footerPhone : phone;
     
@@ -216,6 +227,7 @@ export default function App() {
         });
       }
     };
+
 
     // Відправка
     if (messenger === 'Telegram' || messenger === 'Viber') {
@@ -416,7 +428,7 @@ export default function App() {
             {t('header.cooperation')}
           </button>
           
-          <a href="tel:+380973160364" className="bg-slate-900 hover:bg-blue-600 text-white p-2.5 sm:px-5 sm:py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
+          <a href="tel:+380973160364" onClick={handlePhoneClick} className="bg-slate-900 hover:bg-blue-600 text-white p-2.5 sm:px-5 sm:py-2 rounded-xl transition-all shadow-lg active:scale-95 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1.5 sm:gap-2 text-sm font-bold">
               <span>📞</span> <span className="hidden sm:inline">(097) 316-03-64</span>
             </div>
