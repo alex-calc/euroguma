@@ -16,20 +16,4 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru" />
     <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua" />
   </url>
-  <url>
-    <loc>https://rezinova-plitka.com.ua/thank-you</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru/thank-you" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua/thank-you" />
-  </url>
-  <url>
-    <loc>https://rezinova-plitka.com.ua/ru/thank-you</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://rezinova-plitka.com.ua/ru/thank-you" />
-    <xhtml:link rel="alternate" hreflang="uk" href="https://rezinova-plitka.com.ua/thank-you" />
-  </url>
 </urlset>

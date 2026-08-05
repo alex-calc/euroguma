@@ -7,11 +7,10 @@ const __dirname = path.dirname(__filename);
 
 const BASE_URL = 'https://rezinova-plitka.com.ua';
 
-// В данном SPA (калькуляторе) есть только главная страница и страница Thank You.
-// Если в будущем появятся категории, статьи или товары, их URL нужно добавить в этот массив.
+// В данном SPA (калькуляторе) есть только главная страница.
+// Страница /thank-you — техническая, её НЕ нужно индексировать.
 const pages = [
-  '',
-  '/thank-you'
+  ''
 ];
 
 const generateSitemap = () => {

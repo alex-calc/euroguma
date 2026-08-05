@@ -305,6 +305,14 @@ export default function App() {
 
   // RENDER THANK YOU PAGE
   if (isThankYouPage) {
+    // Добавляем noindex чтобы Google не индексировал страницу благодарности
+    const existingRobots = document.querySelector('meta[name="robots"]');
+    if (!existingRobots) {
+      const meta = document.createElement('meta');
+      meta.name = 'robots';
+      meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+    }
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
         {/* HEADER Ticker */}
