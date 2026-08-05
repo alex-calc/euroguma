@@ -805,6 +805,7 @@ export default function App() {
                 <img 
                   src={item.src} 
                   alt={item.desc} 
+                  loading={index < 3 ? 'eager' : 'lazy'}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
