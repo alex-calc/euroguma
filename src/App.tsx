@@ -796,9 +796,9 @@ export default function App() {
             { src: "/4.webp", desc: t('gallery.cities.poltava') },
             { src: "/5.webp", desc: t('gallery.cities.kharkiv') },
             { src: "/6.webp", desc: t('gallery.cities.kyiv') },
-            { src: "/7.jpg", desc: t('gallery.cities.private1') },
-            { src: "/8.jpg", desc: t('gallery.cities.urban1') },
-            { src: "/9.jpg", desc: t('gallery.cities.carpathians') }
+            { src: "/7.webp", desc: t('gallery.cities.private1') },
+            { src: "/8.webp", desc: t('gallery.cities.urban1') },
+            { src: "/9.webp", desc: t('gallery.cities.carpathians') }
           ].map((item, index) => (
             <div key={index} className="overflow-hidden rounded-2xl shadow-md border border-slate-200 bg-white flex flex-col group cursor-pointer hover:shadow-xl transition-all duration-300 relative">
               <div className="h-64 overflow-hidden relative bg-slate-100 flex items-center justify-center">
