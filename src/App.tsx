@@ -313,6 +313,14 @@ export default function App() {
       meta.content = 'noindex, nofollow';
       document.head.appendChild(meta);
     }
+    // Virtual page view для Google Ads URL-based конверсии (SPA не перезагружает страницу)
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('config', 'AW-18279837422', {
+        page_path: '/thank-you',
+        page_location: 'https://rezinova-plitka.com.ua/thank-you',
+        page_title: 'Thank You'
+      });
+    }
     return (
       <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased flex flex-col justify-between selection:bg-blue-600 selection:text-white">
         {/* HEADER Ticker */}
