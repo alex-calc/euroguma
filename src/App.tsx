@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const PRICE_BY_THICKNESS: Record<number, number> = {
-  1: 840, // 20 мм
+  1: 900, // 20 мм
   2: 1050  // 30 мм
 };
 
@@ -687,7 +687,7 @@ export default function App() {
               <input 
                 type="tel" placeholder={t('calc.phonePlaceholder')} value={phone} onChange={(e) => handlePhoneChange(e, setPhone)}
                 aria-label={t('calc.phonePlaceholder')}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-800/80 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-500 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-inner placeholder-slate-300 font-medium"
               />
               <div className="pt-1 space-y-3">
                 <button 
