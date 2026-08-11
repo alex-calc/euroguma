@@ -227,7 +227,7 @@ export default function App() {
 
         // 2. Google Ads Конверсия
         (window as any).gtag('event', 'conversion', {
-          'send_to': 'AW-18279837422/EewdCJ3X_84cEO7dwIxE',
+          'send_to': 'AW-18279837422/v4caCJPL398cEO7dwIxE',
           'value': 1.0,
           'currency': 'UAH'
         });
