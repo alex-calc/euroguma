@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const PRICE_BY_THICKNESS: Record<number, number> = {
-  1: 900, // 20 мм
-  2: 1050  // 30 мм
+  1: 950, // 20 мм
+  2: 1100  // 30 мм
 };
 
 const WEIGHT_MATRIX: Record<number, number> = {
@@ -85,7 +85,7 @@ export default function App() {
   }, [activities.length]);
 
   const getThicknessMm = (level: number) => level === 1 ? '20 мм' : '30 мм';
-  const pricePerMeter = PRICE_BY_THICKNESS[thickness] || 1050;
+  const pricePerMeter = PRICE_BY_THICKNESS[thickness] || 1100;
   const total = area * pricePerMeter;
   
   const weightPerMeter = WEIGHT_MATRIX[thickness] || 24; 
